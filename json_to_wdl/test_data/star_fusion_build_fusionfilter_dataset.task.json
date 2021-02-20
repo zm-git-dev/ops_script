@@ -1,0 +1,192 @@
+[{
+    "task_id": "Star_fusion_build_fusionfilter_dataset",
+    "main": "",
+    "cmd": "",
+    "cpu": 4,
+    "memory": 4,
+    "docker": {
+        "image": "",
+        "volumns": [
+            "/storeData/db:/data/pipeline/pfi/db"
+        ]
+    },
+    "outputs": [
+        {
+            "key": "result",
+            "value": "./",
+            "type": "Folder"
+        }
+    ],
+    "parameters": [
+        {
+            "order": 0,
+            "key": "genome_fa",
+            "map_key": "--genome_fa",
+            "type": "String",
+            "required": false,
+            "display_name_en": "genome_fa",
+            "display_name_cn": "genome_fa",
+            "description_en": "genome fasta file",
+            "description_cn": "genome fasta file",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 1,
+            "key": "gtf",
+            "map_key": "--gtf",
+            "type": "String",
+            "required": false,
+            "display_name_en": "gtf",
+            "display_name_cn": "gtf",
+            "description_en": "transcript structure annotation",
+            "description_cn": "transcript structure annotation",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 2,
+            "key": "dfam_db",
+            "map_key": "--dfam_db",
+            "type": "String",
+            "required": false,
+            "display_name_en": "dfam_db",
+            "display_name_cn": "dfam_db",
+            "description_en": "DNA transposable element database (Dfam.hmm), required for repeat masking. (** highly recommended **)",
+            "description_cn": "DNA transposable element database (Dfam.hmm), required for repeat masking. (** highly recommended **)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 3,
+            "key": "output_dir",
+            "map_key": "--output_dir",
+            "type": "String",
+            "required": false,
+            "display_name_en": "output_dir",
+            "display_name_cn": "output_dir",
+            "description_en": "output directory (default: ctat_genome_lib_build_dir)",
+            "description_cn": "output directory (default: ctat_genome_lib_build_dir)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 4,
+            "key": "fusion_annot_lib",
+            "map_key": "--fusion_annot_lib",
+            "type": "String",
+            "required": false,
+            "display_name_en": "fusion_annot_lib",
+            "display_name_cn": "fusion_annot_lib",
+            "description_en": "fusion annotation library (key/val pairs, tab-delimited)",
+            "description_cn": "fusion annotation library (key/val pairs, tab-delimited)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 5,
+            "key": "annot_filter_rule",
+            "map_key": "--annot_filter_rule",
+            "type": "String",
+            "required": false,
+            "display_name_en": "annot_filter_rule",
+            "display_name_cn": "annot_filter_rule",
+            "description_en": "target AnnotFilterRule.pm (default: /usr/local/src/STAR-Fusion/ctat-genome-lib-builder/AnnotFilterRuleLib/AnnotFilterRule.pm)",
+            "description_cn": "target AnnotFilterRule.pm (default: /usr/local/src/STAR-Fusion/ctat-genome-lib-builder/AnnotFilterRuleLib/AnnotFilterRule.pm)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 6,
+            "key": "pfam_db",
+            "map_key": "--pfam_db",
+            "type": "String",
+            "required": false,
+            "display_name_en": "pfam_db",
+            "display_name_cn": "pfam_db",
+            "description_en": "/path/to/Pfam-A.hmm  ",
+            "description_cn": "/path/to/Pfam-A.hmm  ",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 7,
+            "key": "max_readlength",
+            "map_key": "--max_readlength",
+            "type": "String",
+            "required": false,
+            "display_name_en": "max_readlength",
+            "display_name_cn": "max_readlength",
+            "description_en": "max length for an individual RNA-Seq read (ie. default: 150)",
+            "description_cn": "max length for an individual RNA-Seq read (ie. default: 150)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 8,
+            "key": "CPU",
+            "map_key": "--CPU",
+            "type": "String",
+            "required": false,
+            "display_name_en": "CPU",
+            "display_name_cn": "CPU",
+            "description_en": "number of threads (defalt: 4)",
+            "description_cn": "number of threads (defalt: 4)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 9,
+            "key": "gmap_build",
+            "map_key": "--gmap_build",
+            "type": "String",
+            "required": false,
+            "display_name_en": "gmap_build",
+            "display_name_cn": "gmap_build",
+            "description_en": "include gmap_build (for use w/ DISCASM/GMAP-fusion)",
+            "description_cn": "include gmap_build (for use w/ DISCASM/GMAP-fusion)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 10,
+            "key": "outTmpDir",
+            "map_key": "--outTmpDir",
+            "type": "String",
+            "required": false,
+            "display_name_en": "outTmpDir",
+            "display_name_cn": "outTmpDir",
+            "description_en": "passed to STAR (very useful if local disks are faster than network disks)",
+            "description_cn": "passed to STAR (very useful if local disks are faster than network disks)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 11,
+            "key": "human_gencode_filter",
+            "map_key": "--human_gencode_filter",
+            "type": "String",
+            "required": false,
+            "display_name_en": "human_gencode_filter",
+            "display_name_cn": "human_gencode_filter",
+            "description_en": "customized prep operations for human/gencode genome and annotation data.",
+            "description_cn": "customized prep operations for human/gencode genome and annotation data.",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        }
+    ],
+    "input_files": []
+}
+]

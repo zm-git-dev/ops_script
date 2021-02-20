@@ -1,0 +1,50 @@
+[
+  {
+    "task_id": "Samtools_collate",
+    "main": "/root/biosoft/samtools/bin/samtools",
+    "cmd": "${main} collate -u --threads 8 -o ",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outputdir}",
+        "type": "Folder",
+        "no_need_archive": true
+      }
+    ],
+    "parameters": [
+      {
+        "description_cn": "output directory (default: .)",
+        "key": "outputdir",
+        "required": false,
+        "value_from": "",
+        "default": "result",
+        "map_key": "--outputdir",
+        "description_en": "output directory (default: .)",
+        "type": "String",
+        "order": 1,
+        "display_name_cn": "outputdir",
+        "display_name_en": "outputdir",
+        "validation_rule": ""
+      },
+      {
+        "order": 2,
+        "key": "input_file",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "input_file",
+        "display_name_cn": "input_file",
+        "description_en": "input_file",
+        "description_cn": "input_file",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.input_file}"
+      }
+    ],
+    "input_files": []
+  }
+]

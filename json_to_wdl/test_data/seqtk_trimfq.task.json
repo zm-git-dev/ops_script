@@ -1,0 +1,108 @@
+[{
+    "task_id": "Seqtk_trimfq",
+    "main": "",
+    "cmd": "",
+    "cpu": 4,
+    "memory": 40,
+    "docker": {
+        "image": "",
+        "volumns": [
+            "/storeData/db:/data/pipeline/pfi/db"
+        ]
+    },
+    "outputs": [
+        {
+            "key": "result",
+            "value": "./",
+            "type": "Folder"
+        }
+    ],
+    "parameters": [
+        {
+            "order": 1,
+            "key": "q",
+            "map_key": "-q",
+            "type": "String",
+            "required": false,
+            "display_name_en": "q",
+            "display_name_cn": "error rate threshold (disabled by -b/-e) [0.05]",
+            "description_en": "error rate threshold (disabled by -b/-e) [0.05]",
+            "description_cn": "error rate threshold (disabled by -b/-e) [0.05]",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 2,
+            "key": "l",
+            "map_key": "-l",
+            "type": "String",
+            "required": false,
+            "display_name_en": "l",
+            "display_name_cn": "l",
+            "description_en": "maximally trim down to INT bp (disabled by -b/-e) [30]",
+            "description_cn": "maximally trim down to INT bp (disabled by -b/-e) [30]",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 3,
+            "key": "b",
+            "map_key": "-b",
+            "type": "String",
+            "required": false,
+            "display_name_en": "b",
+            "display_name_cn": "b",
+            "description_en": "trim INT bp from left (non-zero to disable -q/-l) [0]",
+            "description_cn": "trim INT bp from left (non-zero to disable -q/-l) [0]",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 4,
+            "key": "e",
+            "map_key": "-e",
+            "type": "String",
+            "required": false,
+            "display_name_en": "e",
+            "display_name_cn": "e",
+            "description_en": "trim INT bp from right (non-zero to disable -q/-l) [0]",
+            "description_cn": "trim INT bp from right (non-zero to disable -q/-l) [0]",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 5,
+            "key": "L",
+            "map_key": "-L",
+            "type": "String",
+            "required": false,
+            "display_name_en": "L",
+            "display_name_cn": "L",
+            "description_en": "retain at most INT bp from the 5'-end (non-zero to disable -q/-l) [0]",
+            "description_cn": "retain at most INT bp from the 5'-end (non-zero to disable -q/-l) [0]",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        },
+        {
+            "order": 6,
+            "key": "Q",
+            "map_key": "-Q",
+            "type": "String",
+            "required": false,
+            "display_name_en": "Q",
+            "display_name_cn": "Q",
+            "description_en": "force FASTQ output",
+            "description_cn": "force FASTQ output",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+        }
+    ],
+    "input_files": []
+}
+]

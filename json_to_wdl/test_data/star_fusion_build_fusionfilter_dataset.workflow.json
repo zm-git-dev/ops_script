@@ -1,0 +1,12 @@
+[
+    {
+        "workflow_code": "AP12939202304",
+        "workflow_name": "star_fusion_build_fusionfilter_dataset",
+        "steps": [
+            {
+                "run_type": "scatter",
+                "task_id": "Star_fusion_build_fusionfilter_dataset"
+            }
+        ]
+    }
+]

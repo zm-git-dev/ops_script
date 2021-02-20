@@ -1,0 +1,211 @@
+[
+  {
+    "task_id": "Nipt",
+    "main": "/mnt/disk0/pipeline/AccuR-Seq_NIPT/bin/Onestep-Zebra",
+    "cmd": "${main} ${input_files.sample_fq} ${input_files.sample_text}",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "nipt:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outdir}/output",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "outdir",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output dir",
+        "display_name_cn": "输出路径",
+        "description_en": "Output dir",
+        "description_cn": "输出路径",
+        "validation_rule": "",
+        "default": "result",
+        "value_from": ""
+      },
+      {
+        "order": 2,
+        "key": "show_gender",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Show Gender",
+        "display_name_cn": "展示性别",
+        "description_en": "Show Gender",
+        "description_cn": "展示性别",
+        "validation_rule": "",
+        "default": "T",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "seq_type",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Sequencing Type",
+        "display_name_cn": "测序类型",
+        "description_en": "Sequencing Type",
+        "description_cn": "测序类型",
+        "validation_rule": ["200", "2000"],
+        "default": "200",
+        "value_from": ""
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sample_fq",
+        "codes": [
+             "import re",
+             "def get_fq(samples):",
+             "    samples_len = len(samples)",
+             "    fq_line = \"SampleID\tBarcodeID\tSlideID\tLaneID\tPath\\n\"",
+             "    for sample in samples:",
+             "        for i in range(len(sample['read1'])):",
+             "            line = sample['read1'][i]",
+             "            match = re.match(r'(.*)/(.*)_([0-9a-zA-Z]*)_([0-9]*).fq.gz', line)",
+             "            fq_line += \"%s\t%s\t%s\t%s\t%s\"%(sample['sample_id'],match.group(4),match.group(2),match.group(3),line)",
+             "            if samples_len != 1 or i != (len(sample['read1'])-1):",
+             "                fq_line +=\"\\n\"",
+             "        samples_len -= 1",
+             "    return fq_line"
+        ]
+      },
+      {
+        "file_name": "sample_text",
+         "codes": [
+           "import re",
+           "def get_text(samples):",
+           "    samples_len = len(samples)",
+           "    text_line = \"Sample Name\tPatient Name\tAge\tGestational Weeks\tPhysician\tSample ID\tClinic No\tPregnancy\tSample Type\tSample Collected\tSample Received\\n\"",
+           "    for sample in samples:",
+           "        for i in range(len(sample['read1'])):",
+           "            line = sample['read1'][i]",
+           "            metadata = sample['metadata']",
+           "            match = re.match(r'(.*)/(.*).fq.gz', line)",
+           "            if metadata.get(\"collection_time\",None) and len(metadata[\"collection_time\"])>=10:",
+           "                metadata[\"collection_time\"] = metadata[\"collection_time\"][0:10]",
+           "            if metadata.get(\"receiving_time\",None) and len(metadata[\"receiving_time\"])>=10:",
+           "                metadata[\"receiving_time\"] = metadata[\"receiving_time\"][0:10]",
+           "            text_line += \"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\"%(match.group(2),metadata.get(\"patient_name\",None),metadata.get(\"age\",None),metadata.get(\"gestation_week\",None),",
+           "                metadata.get(\"physician\",None),sample['sample_id'],metadata.get(\"clinic_no\",None),metadata.get(\"pregnancy\",None),metadata.get(\"sample_source\",None),metadata.get(\"collection_time\",None),metadata.get(\"receiving_time\",None))",
+           "            if samples_len != 1 or i != (len(sample['read1'])-1):",
+           "                text_line +=\"\\n\"",
+           "        samples_len -= 1",
+           "    return text_line"
+        ]
+      },
+      {
+        "file_name": "params_file",
+        "no_need_create": true,
+        "columns": [
+          {
+            "value_from": "${sample.metadata.files.read1}",
+            "file_filter": "*.fq.gz"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Collection time",
+            "display_name_cn": "采样时间",
+            "description_en": "Collection time",
+            "description_cn": "采样时间",
+            "value_from": "${sample.metadata.collection_time}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Receiving time",
+            "display_name_cn": "接收时间",
+            "description_en": "Receiving time",
+            "description_cn": "接收时间",
+            "value_from": "${sample.metadata.receiving_time}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Patient name",
+            "display_name_cn": "孕妇姓名",
+            "description_en": "Patient name",
+            "description_cn": "孕妇姓名",
+            "value_from": "${sample.metadata.patient_name}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Age",
+            "display_name_cn": "年龄",
+            "description_en": "Age",
+            "description_cn": "年龄",
+            "value_from": "${sample.metadata.age}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Gestation week",
+            "display_name_cn": "孕周",
+            "description_en": "Gestation week",
+            "description_cn": "孕周",
+            "value_from": "${sample.metadata.gestation_week}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Physician",
+            "display_name_cn": "送检医生",
+            "description_en": "Physician",
+            "description_cn": "送检医生",
+            "value_from": "${sample.metadata.physician}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Clinic No",
+            "display_name_cn": "住院/门诊号",
+            "description_en": "Clinic No",
+            "description_cn": "住院/门诊号",
+            "value_from": "${sample.metadata.clinic_no}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Pregnancy",
+            "display_name_cn": "单胎/双胎妊娠",
+            "description_en": "Pregnancy",
+            "description_cn": "单胎/双胎妊娠",
+            "value_from": "${sample.metadata.pregnancy}"
+          }
+        ]
+      }
+    ],
+    "archive_rules":[
+      {
+        "codes": "def achive():\n    import re\n    import os\n    for i in range(len(sample['read1'])):\n        line = sample['read1'][i]\n        metadata = sample['metadata']\n        sample_id = sample['sample_id']\n        match = re.match(r'(.*)/(.*)_([0-9a-zA-Z]*)_([0-9]*).fq.gz', line)\n        flowcell_id = match.group(2)\n        lane_id = match.group(3)\n        barcode_id = match.group(4)\n        path =  origin_path + \"/07.final/report/\" + flowcell_id + \"_\" + lane_id + \"_\" + barcode_id + \"/\"\n        name = flowcell_id + \"_\" + lane_id + \"_\" + barcode_id\n        cmd = \"cp \" + path + name + \"_main_en.html \" + path + sample_id + \"_en.html\"\n        os.system(cmd)\n        cmd = \"cp \" + path + name + \"_main_cn.html \" + path + sample_id + \"_cn.html\"\n        os.system(cmd)",
+        "origin_path": "${output.result}"
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": []
+  }
+]

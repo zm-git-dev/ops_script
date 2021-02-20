@@ -1,0 +1,34 @@
+[
+  {
+    "task_id": "Md5sum_fastq",
+    "main": "md5sum",
+    "cmd": "cd ${parameters.fastq_path}; ls *fq.gz | xargs -n 1 -P ~{cpu} md5sum > md5sum.txt",
+    "cpu": 10,
+    "memory": 1,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [],
+    "parameters": [
+      {
+         "order": 1,
+         "key": "fastq_path",
+         "type": "File",
+         "map_key": "",
+         "have_in_cmd": true,
+         "required": true,
+         "display_name_en": "Fastq path",
+         "display_name_cn": "下机数据路径",
+         "description_en": "Fastq path",
+         "description_cn": "下机数据路径",
+         "validation_rule": "",
+         "default": "",
+         "value_from": ""
+      }
+    ],
+    "input_files": []
+  }
+]

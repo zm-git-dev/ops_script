@@ -1,0 +1,119 @@
+[
+  {
+    "task_id": "Hmbi",
+    "main": "hmbi-pipeline:v1.0",
+    "cmd": "echo '/storeData/pipeline/HMBIV2.0.0.2-pp_upload/ChineseMedicineLocal_V3_pp.pl --list ${input_files.sampleList} --outdir --seq ${parameters.sequencing_mode}' | xargs -I cmd docker run --rm -v /data:/data -v /storeData:/storeData ${main} /bin/bash -c cmd",
+    "cpu": 4,
+    "memory": 20,
+    "docker": {
+      "image": "hmbi-pipeline:v1.0",
+      "volumns": [
+        "/storeData:/storeData"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "./",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "sequencing_mode",
+        "map_key": "--seq",
+        "type": "String",
+        "required": true,
+        "display_name_en": "sequencing_mode",
+        "display_name_cn": "sequencing_mode",
+        "description_en": "sequencing_mode",
+        "description_cn": "sequencing_mode",
+        "validation_rule": ["SE","PE"],
+        "default": "SE",
+        "value_from": "${sample.metadata.sequencing_mode}"
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sampleList",
+        "codes": [
+           "def get_sampleList(samples):",
+           "    import time",
+           "    line = ''",
+           "    for sample in samples:",
+           "        metadata = sample['metadata']",
+           "        serial_number = sample['sample_id']",
+           "        sample_name = sample.get('sample_name', serial_number)",
+           "        customer_name = metadata.get('customer_name', None)",
+           "        gene = metadata.get('gene', None)",
+           "        operator = metadata.get('operator', None)",
+           "        localtime = time.localtime()",
+           "        analysis_date = '%s-%s-%s' %(localtime.tm_year, localtime.tm_mon, localtime.tm_hour)",
+           "        sequencing_mode = 'SE' if len(sample['read2']) == 0 else 'PE'",
+           "        for i in range(len(sample['read1'])):",
+           "            reads = sample['read1'][i] if sequencing_mode == 'SE' else '%s,%s'%(sample['read1'][i], sample['read2'][i])",
+           "            line += '%s\t%s\t%s\t%s\t%s\t%s\t%s",
+           "' %(customer_name, serial_number, sample_name, reads, gene, analysis_date, operator)",
+           "    return line"
+        ]
+      },
+      {
+         "file_name": "params_file",
+         "no_need_create": true,
+         "columns": [
+            {
+               "type": "String",
+               "required": false,
+               "display_name_en": "Customer Name",
+               "display_name_cn": "客户姓名",
+               "description_en": "Customer Name",
+               "description_cn": "客户姓名",
+               "value_from": "${sample.metadata.customer_name}"
+            },
+            {
+               "type": "String",
+               "required": false,
+               "display_name_en": "Sample Name",
+               "display_name_cn": "样本名称",
+               "description_en": "Sample Name",
+               "description_cn": "样本名称",
+               "value_from": "${sample.metadata.sample_name}"
+            },
+            {
+               "type": "String",
+               "required": true,
+               "display_name_en": "Gene",
+               "display_name_cn": "基因",
+               "description_en": "Gene",
+               "description_cn": "基因",
+               "value_from": "${sample.metadata.gene}",
+               "validation_rule": ["ITS2", "PSBA"]
+            },
+            {
+               "type": "String",
+               "required": false,
+               "display_name_en": "Operator",
+               "display_name_cn": "操作人",
+               "description_en": "Operator",
+               "description_cn": "操作人",
+               "value_from": "${sample.metadata.operator}"
+            }
+         ]
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": []
+  }
+]

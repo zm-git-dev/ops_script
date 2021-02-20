@@ -1,0 +1,171 @@
+[
+  {
+    "task_id": "Meta",
+    "main": "meta-pipeline:v1.0",
+    "cmd": "mkdir ${parameters.outdir} && cp ${input_files.sampleList} `pwd`/sample_list && docker run --rm -u `id -u`:`id -g` -v /mnt/ssd/Meta_Pipeline:/mnt/ssd/Meta_Pipeline -v `pwd`:/OUT ${main} /bin/bash /mnt/ssd/Meta_Pipeline/Meta_Pipeline.sh ${parameters.sequencing_type} /OUT/sample_list ${sample.sample_id} /OUT/${parameters.outdir}",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outdir}",
+        "type": "Folder"
+      },
+      {
+        "key": "log",
+        "value": "${parameters.outdir}/${sample.sample_id}.log",
+        "type": "File"
+      },
+      {
+        "key": "genefamilies",
+        "value": "${parameters.outdir}/${sample.sample_id}.genefamilies.tsv",
+        "type": "File"
+      },
+      {
+        "key": "metaphlan_bugs_list",
+        "value": "${parameters.outdir}/${sample.sample_id}.metaphlan_bugs_list.tsv",
+        "type": "File"
+      },
+      {
+        "key": "pathabundance",
+        "value": "${parameters.outdir}/${sample.sample_id}.pathabundance.tsv",
+        "type": "File"
+      },
+      {
+        "key": "pathcoverage",
+        "value": "${parameters.outdir}/${sample.sample_id}.pathcoverage.tsv",
+        "type": "File"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "outdir",
+        "map_key": "",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Output dir",
+        "display_name_cn": "输出路径",
+        "description_en": "Output dir",
+        "description_cn": "输出路径",
+        "validation_rule": "",
+        "default": "result",
+        "value_from": ""
+      },
+      {
+        "description_cn": "测序类型",
+        "key": "sequencing_type",
+        "required": false,
+        "value_from": "code#def get_sequencing_type(read2=${sample.metadata.files.read2}):\n  return'SE' if read2 else 'PE'#",
+        "default": "",
+        "map_key": "",
+        "description_en": "sequencing_type",
+        "type": "String",
+        "order": 2,
+        "display_name_cn": "测序类型",
+        "display_name_en": "sequencing_type",
+        "validation_rule": ["SE", "PE"]
+   }
+    ],
+    "input_files": [
+      {
+        "file_name": "sampleList",
+        "codes": [
+            "def get_sampleList(samples):",
+            "    sample = samples[0]",
+            "    metadata = sample['metadata']",
+            "    sequencing_type = \"PE\" if len(sample['read2']) > 0 else \"SE\"",
+            "    line = \"\"",
+            "    for i in range(len(sample['read1'])):",
+            "        if sequencing_type == \"PE\":",
+            "            line += \"%s %s\"%(sample['read1'][i], sample['read2'][i])",
+            "        else:",
+            "            line += sample['read1'][i]",
+            "        if i != len(sample['read1'])-1:",
+            "            line += \"\\n\"",
+            "    return line"
+        ]
+      }
+    ]
+  },
+  {
+    "task_id": "Meta_upload",
+    "main": "meta-pipeline:v1.0",
+    "cmd": "docker run --rm -u `id -u`:`id -g` -v ${parameters.Home}/bin:/IN -v ${parameters.meta_result}:/OUT ${main} python3 /IN/upload_file.py /OUT ${input_files.uploadInfo}",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "interpret_report",
+        "value": "${parameters.meta_result}/interpret_report.json",
+        "type": "File"
+      }
+    ],
+    "parameters": [
+    {
+      "description_cn": "Home",
+      "key": "Home",
+      "required": false,
+      "value_from": "",
+      "default": "",
+      "map_key": "",
+      "description_en": "Home",
+      "type": "String",
+      "order": 1,
+      "display_name_cn": "Home",
+      "display_name_en": "Home",
+      "validation_rule": "",
+      "ui_no_need": true
+    },
+   {
+      "description_cn": "output directory (default: .)",
+      "key": "meta_result",
+      "required": false,
+      "value_from": "",
+      "default": "",
+      "map_key": "",
+      "description_en": "output directory (default: .)",
+      "type": "String",
+      "order": 2,
+      "display_name_cn": "meta_result",
+      "display_name_en": "meta_result",
+      "validation_rule": "",
+      "ui_no_need": true
+   }
+
+    ],
+    "input_files": [
+      {
+        "file_name": "uploadInfo",
+        "barcode_files_type": "MERGE",
+        "column_separator": "\t",
+        "barcode_files_merge_by": ",",
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.interpret_report}",
+            "default_value": "None"
+          },
+          {
+            "value_from": "${sample.metadata.company_num}",
+            "default_value": "None"
+          }
+        ]
+      }
+    ]
+  }
+]

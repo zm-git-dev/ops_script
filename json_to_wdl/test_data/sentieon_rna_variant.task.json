@@ -1,0 +1,217 @@
+[
+  {
+    "task_id": "Sentieon_split_bam",
+    "main": "/home/sentieon/sentieon-genomics-201911/bin/sentieon",
+    "cmd": "${main} driver -t ${cpu} --algo RNASplitReadsAtJunction",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "output_bam",
+        "value": "${parameters.output_bam}",
+        "type": "File"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "reference",
+        "map_key": "-r",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Reference",
+        "display_name_cn": "参考序列",
+        "description_en": "Reference",
+        "description_cn": "参考序列",
+        "validation_rule": "",
+        "default": "/mnt/sdc/pipeline_database/hg19/hg19.fasta",
+        "value_from": ""
+      },
+      {
+        "order": 2,
+        "key": "sample_bam",
+        "map_key": "-i",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Sample Bam",
+        "display_name_cn": "样本bam文件",
+        "description_en": "the location where the previous deduping stage stored the result.",
+        "description_cn": "样本bam文件",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.sample_bam}"
+      },
+      {
+        "order": 3,
+        "key": "Reassign_mapq",
+        "map_key": "--reassign_mapq",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Reassign mapq",
+        "display_name_cn": "Reassign mapq",
+        "description_en": "Reassign mapq",
+        "description_cn": "Reassign mapq",
+        "validation_rule": "",
+        "default": "255:60",
+        "value_from": ""
+      },
+      {
+        "order": 4,
+        "key": "output_bam",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output split bam",
+        "display_name_cn": "输出bam文件",
+        "description_en": "Output split bam",
+        "description_cn": "输出bam文件",
+        "validation_rule": "",
+        "default": "split.bam",
+        "value_from": ""
+      }
+    ],
+    "input_files": []
+  },
+  {
+    "task_id": "Sentieon_rna_variant",
+    "main": "/home/sentieon/sentieon-genomics-201911/bin/sentieon",
+    "cmd": "${main} driver -t ${cpu} --trim_soft_clip",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "variant_vcf",
+        "value": "${parameters.variant_vcf}",
+        "type": "File"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "reference",
+        "map_key": "-r",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Reference",
+        "display_name_cn": "参考序列",
+        "description_en": "Reference",
+        "description_cn": "参考序列",
+        "validation_rule": "",
+        "default": "/mnt/sdc/pipeline_database/hg19/hg19.fasta",
+        "value_from": ""
+      },
+      {
+        "order": 2,
+        "key": "split_bam",
+        "map_key": "-i",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Split Bam",
+        "display_name_cn": "样本bam文件",
+        "description_en": "the location where the previous deduping stage stored the result.",
+        "description_cn": "样本bam文件",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "",
+        "ui_no_need": true
+      },
+      {
+        "order": 3,
+        "key": "recal_data_table",
+        "map_key": "-q",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Recal data table",
+        "display_name_cn": "Recal data table",
+        "description_en": "The location where the previous BQSR stage stored the result.",
+        "description_cn": "The location where the previous BQSR stage stored the result.",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.recal_data_table}"
+      },
+      {
+        "order": 4,
+        "key": "algo",
+        "map_key": "--algo",
+        "type": "String",
+        "required": true,
+        "display_name_en": "algo",
+        "display_name_cn": "algo",
+        "description_en": "algo",
+        "description_cn": "algo",
+        "validation_rule": "",
+        "default": "Haplotyper",
+        "value_from": ""
+      },
+      {
+        "order": 5,
+        "key": "call_conf",
+        "map_key": "--call_conf",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Call conf",
+        "display_name_cn": "Call conf",
+        "description_en": "Call conf",
+        "description_cn": "Call conf",
+        "validation_rule": "",
+        "default": "20",
+        "value_from": ""
+      },
+      {
+        "order": 6,
+        "key": "emit_conf",
+        "map_key": "--emit_conf",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Emit conf",
+        "display_name_cn": "Emit conf",
+        "description_en": "Emit conf",
+        "description_cn": "Emit conf",
+        "validation_rule": "",
+        "default": "20",
+        "value_from": ""
+      },
+      {
+        "order": 7,
+        "key": "db_snp",
+        "map_key": "-d",
+        "type": "String",
+        "required": false,
+        "display_name_en": "db SNP",
+        "display_name_cn": "db SNP",
+        "description_en": "db SNP",
+        "description_cn": "db SNP",
+        "validation_rule": "",
+        "default": "",
+        "value_from": ""
+      },
+      {
+        "order": 8,
+        "key": "variant_vcf",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Variant vcf",
+        "display_name_cn": "Variant vcf",
+        "description_en": "Variant vcf",
+        "description_cn": "Variant vcf",
+        "validation_rule": "",
+        "default": "variant.vcf",
+        "value_from": ""
+      }
+    ],
+    "input_files": []
+  }
+]

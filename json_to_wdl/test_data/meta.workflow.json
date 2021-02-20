@@ -1,0 +1,22 @@
+[
+  {
+    "workflow_code": "AP12934232623",
+    "workflow_name": "meta_test",
+    "batch_analysis": false,
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Meta"
+      },
+      {
+        "run_type": "scatter",
+        "task_id": "Meta_upload",
+        "input_mapping":{
+          "meta_result": "Meta.result",
+          "Home": "Home"
+        }
+      }
+
+    ]
+  }
+]

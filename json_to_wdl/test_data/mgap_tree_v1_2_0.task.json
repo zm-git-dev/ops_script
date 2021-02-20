@@ -1,0 +1,262 @@
+[
+  {
+    "task_id": "Mgap_tree_v1_2_0",
+    "main": "/mnt/disk0/pipeline/MGAP/bin/MGAP",
+    "cmd": "${main} ${input_files.sample_list} --run_mode local --ref2core ${input_files.ref2core} --group ${input_files.group_list} && sh ${parameters.outdir}/shell/pipeline.sh",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outdir}/Result",
+        "file_pattern": "[*]",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "type",
+        "map_key": "--type",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Sequencing type",
+        "display_name_cn": "Sequencing type",
+        "description_en": "Sequencing type",
+        "description_cn": "Sequencing type",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "code#def getse(read2=${sample.metadata.files.read2}):\n  return'PE' if read2 else 'SE'#"
+      },
+      {
+        "order": 3,
+        "key": "analysis",
+        "map_key": "--analysis",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Analysis steps",
+        "display_name_cn": "Analysis steps",
+        "description_en": "Analysis steps",
+        "description_cn": "Analysis steps",
+        "validation_rule": "",
+        "default": "GenomeComponent:GenePredict-AnnoCompare:CorePan,SNPIndel-Tree:cgSNP,wgSNP",
+        "value_from": ""
+      },
+      {
+        "order": 4,
+        "key": "outdir",
+        "map_key": "-o",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output dir",
+        "display_name_cn": "输出路径",
+        "description_en": "Output dir",
+        "description_cn": "输出路径",
+        "validation_rule": "",
+        "default": "result",
+        "value_from": ""
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sample_list",
+        "barcode_files_type": "EACH_LINE",
+        "column_separator": "\t",
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.sample_type}",
+            "validation_rule": ["fungi", "bacteria", "virus"]
+          },
+          {
+            "value_from": "${sample.metadata.genomic}",
+            "required": true,
+            "type": "File",
+            "file_filter": "*.fna,*fasta,*fa"
+          }
+        ]
+      },
+      {
+         "file_name": "group_list",
+         "codes": [
+            "def get_group_list(samples):",
+            "    group_line = \"\"",
+            "    group_mapping = {}",
+            "    for sample in samples:",
+            "        metadata = sample['metadata']",
+            "        serial_number = sample['sample_id']",
+            "        group_name = metadata[\"group_name\"]",
+            "        #ref2core_list",
+            "        if not group_mapping.get(group_name, []):",
+            "            group_mapping[group_name] = []",
+            "        group_mapping[group_name].append(serial_number)",
+            "    #group_list",
+            "    group_count = 1",
+            "    for group in group_mapping:",
+            "        sample_name_count = 1",
+            "        for sample_name in group_mapping[group]:",
+            "            group_line += \"%s\" % sample_name",
+            "            if sample_name_count != len(group_mapping[group]):",
+            "                group_line += \"\t\"",
+            "            sample_name_count += 1",
+            "        if group_count != len(group_mapping):",
+            "            group_line += \"\\n\"",
+            "        group_count += 1",
+            "    return group_line"
+         ]
+      },
+      {
+         "file_name": "ref2core",
+         "codes": [
+             "def get_ref2core(samples):",
+             "    ref2core_lines = []",
+             "    group_names = {}",
+             "    for sample in samples:",
+             "        name = sample.get('metadata').get('group_name', '')",
+             "        names = group_names.get(name, [])",
+             "        names.append(sample['sample_id'])",
+             "        group_names[name] = names",
+             "    for sample in samples:",
+             "        lookup_values = samples[0].get('LOOKUPVALUES', [])",
+             "        metadata = sample['metadata']",
+             "        sample_type = metadata['sample_type']",
+             "        group_name = metadata.get('group_name', '').strip()",
+             "        ref_list = metadata.get('ref')",
+             "        group_name = group_names.get(group_name)[0]",
+             "        if ref_list and ref_list != '':",
+             "            ref_list = ref_list.split(';')",
+             "            for ref in ref_list:",
+             "                sequence_name, genomic_sequence, protein_sequence = ('na', 'na', 'na',)",
+             "                for lookup in lookup_values:",
+             "                    if lookup.get('type') == 'ref' and ref == lookup.get('name'):",
+             "                        sequence_name = lookup.get('name', 'na').strip()",
+             "                        genomic_sequence = lookup.get('metadata.phylogenetic_genomic_sequence', 'na').strip()",
+             "                        protein_sequence = lookup.get('metadata.phylogenetic_protein_sequence', 'na').strip()",
+             "                ref2core_line = '%s\t%s\t%s\t%s' % (group_name,",
+             "                                sample_type, sequence_name, genomic_sequence)",
+             "                if protein_sequence != 'na' and protein_sequence.upper() != 'NONE':",
+             "                    ref2core_line = '%s\t%s' %(ref2core_line, protein_sequence)",
+             "                ref2core_lines.append(ref2core_line)",
+             "        else:",
+             "            sequence_name_list = metadata.get('sequence_name', '').split(';;;')",
+             "            genomic_sequence_list = metadata.get('phylogenetic_genomic_sequence', '').split(';;;')",
+             "            protein_sequence_list = metadata.get('phylogenetic_protein_sequence', '').split(';;;')",
+             "            if metadata.get('sequence_name', '') != '' and len(sequence_name_list) > 0:",
+             "                for i, sequence_name in enumerate(sequence_name_list):",
+             "                    ref2core_line = '%s\t%s\t%s\t%s' % (group_name,",
+             "                                                        sample_type, sequence_name, genomic_sequence_list[i])",
+             "                    if len(protein_sequence_list) > i and protein_sequence_list[i].upper() != 'NONE':",
+             "                        ref2core_line = '%s\t%s' % (ref2core_line, protein_sequence_list[i])",
+             "                    ref2core_lines.append(ref2core_line)",
+             "    return '\\n'.join(ref2core_lines)"
+          ]
+      },
+      {
+         "file_name": "ref2ass",
+         "codes": [
+            "def get_ref2ass(samples):",
+            "    ref2ass_line = \"\"",
+            "    index = 0",
+            "    for sample in samples:",
+            "        index += 1",
+            "        metadata = sample['metadata']",
+            "        serial_number = sample['sample_id']",
+            "        sample_type = metadata[\"sample_type\"]",
+            "        group_name = metadata[\"group_name\"]",
+            "        sequence_name_list = metadata.get(\"sequence_name\",\"\")",
+            "        genomic_sequence_list = metadata.get(\"phylogenetic_genomic_sequence\",\"\")",
+            "        protein_sequence_list = metadata.get(\"phylogenetic_protein_sequence\",\"\")",
+            "        if sequence_name_list:",
+            "            sequence_name_list = sequence_name_list.split(\";;;\")",
+            "        if genomic_sequence_list:",
+            "            genomic_sequence_list = genomic_sequence_list.split(\";;;\")",
+            "        if protein_sequence_list:",
+            "            protein_sequence_list = protein_sequence_list.split(\";;;\")",
+            "        #ref2ass_list",
+            "        reference = metadata.get(\"phylogenetic_assembly_reference\", None)",
+            "        if reference:",
+            "            ref2ass_line += \"%s\t%s\t%s\"%(serial_number, sample_type, reference)",
+            "            if index != len(samples):",
+            "                ref2ass_line += \"\\n\"",
+            "    return ref2ass_line"
+         ]
+      },
+      {
+        "file_name": "params_file",
+        "no_need_create": true,
+        "columns": [
+          {
+            "type": "String",
+            "required": true,
+            "display_name_en": "Group Name",
+            "display_name_cn": "分组名称",
+            "description_en": "Group Name",
+            "description_cn": "分组名称",
+            "value_from": "${sample.metadata.group_name}"
+          },
+          {
+               "type": "String",
+               "required": false,
+               "display_name_en": "Sequence Name",
+               "display_name_cn": "参考序列名称",
+               "description_en": "Sequence Name",
+               "description_cn": "参考序列名称",
+               "value_from": "${sample.metadata.ref}",
+               "lookup_mappings": "${ref.metadata.sequence_name}",
+               "multiple_select": true,
+               "split_by": ";;;"
+            },
+            {
+               "type": "String",
+               "required": false,
+               "display_name_en": "Genomic Sequence",
+               "display_name_cn": "基因组参考序列",
+               "description_en": "Genomic Sequence",
+               "description_cn": "基因组参考序列",
+               "value_from": "${sample.metadata.ref}",
+               "lookup_mappings": "${ref.metadata.phylogenetic_genomic_sequence}"
+            },
+            {
+               "type": "String",
+               "required": false,
+               "display_name_en": "Protein Sequence",
+               "display_name_cn": "蛋白参考序列",
+               "description_en": "Protein Sequence",
+               "description_cn": "蛋白参考序列",
+               "value_from": "${sample.metadata.ref}",
+               "lookup_mappings": "${ref.metadata.phylogenetic_protein_sequence}"
+            }
+        ]
+      }
+    ],
+   "lookup_definition": [{
+      "name": "ref",
+      "metadata": [{
+          "type": "File",
+          "name": "phylogenetic_genomic_sequence",
+          "filter": "*fa,*faa,*fna,*faa"
+        },{
+          "type": "File",
+          "name": "phylogenetic_protein_sequence",
+          "filter": "*fa,*faa,*fna,*faa"
+        }
+      ]
+   }],
+    "input": [
+      {
+        "key": "genomic",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": []
+  }
+]

@@ -1,0 +1,12 @@
+[
+   {
+      "steps": [
+         {
+            "run_type": "scatter", 
+            "task_id": "Seqtk_trimfq"
+         }
+      ], 
+      "workflow_name": "seqtk_trimfq", 
+      "workflow_code": "AP12939202304"
+   }
+]

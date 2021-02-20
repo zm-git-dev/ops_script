@@ -1,0 +1,13 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "pfi_v4_3",
+    "batch_analysis": true,
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Pfi_V4_3"
+      }
+    ]
+  }
+]

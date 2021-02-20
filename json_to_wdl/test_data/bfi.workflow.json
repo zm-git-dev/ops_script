@@ -1,0 +1,12 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "bfi",
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Bfi"
+      }
+    ]
+  }
+]

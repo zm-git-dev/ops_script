@@ -1,0 +1,110 @@
+[
+  {
+    "task_id": "MGI_FIS_SNP_V1_0",
+    "main": "/mnt/ssd/pipeline/FIS.SNP_v1.0/FIS.SNP",
+    "cmd": "${main} -i ${input_files.sample_list} && sh ${parameters.outdir}/00.Shell/main.script",
+    "cpu": {
+      "value_from": "code#def getcpu(samples=${samples}):\n  n=len(samples)\n  return 40 if (n > 40) else n#",
+      "default": 40,
+      "type": "Int"
+    },
+    "memory": {
+      "value_from": "code#def getmemory(samples=${samples}):\n  n=len(samples)\n  return 100 if (n * 2 > 100) else n*2#",
+      "default": 100,
+      "type": "Int"
+    },
+    "docker": {
+      "image": "FIS:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outdir}/03.Result/Html/FinalResult",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "required": false,
+        "display_name_cn": "分析类型",
+        "map_key": "-c",
+        "default": "",
+        "description_en": "Analysis type, IdentificationProcess represents individual identification process, the default is the entire analysis process",
+        "description_cn": "分析类型，IdentificationProcess代表个体鉴定流程，默认为分析全流程",
+        "value_from": "",
+        "type": "String",
+        "display_name_en": "Analysis type",
+        "key": "config",
+        "validation_rule": [
+           "IdentificationProcess"
+        ],
+        "order": 1
+      },
+      {
+        "order": 2,
+        "key": "raw_data_path",
+        "map_key": "-p",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Raw data path",
+        "display_name_cn": "下机数据路径",
+        "description_en": "Raw data path",
+        "description_cn": "下机数据路径",
+        "validation_rule": "",
+        "default": "",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "outdir",
+        "map_key": "-d",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Output dir",
+        "display_name_cn": "输出路径",
+        "description_en": "Output dir",
+        "description_cn": "输出路径",
+        "validation_rule": "",
+        "default": "result",
+        "value_from": ""
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sample_list",
+        "barcode_files_type": "EACH_LINE",
+        "column_separator": "\t",
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.files.read1}",
+            "required": true,
+            "file_filter": "*.fq.gz,*fq"
+          },
+          {
+            "value_from": "${sample.metadata.group}",
+            "default_value": "None"
+          }
+        ]
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": []
+  }
+]

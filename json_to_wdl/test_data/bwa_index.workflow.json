@@ -1,0 +1,12 @@
+[
+   {
+      "steps": [
+         {
+            "run_type": "scatter", 
+            "task_id": "Bwa_index"
+         }
+      ], 
+      "workflow_name": "bwa_index", 
+      "workflow_code": "AP12939202304"
+   }
+]

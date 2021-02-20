@@ -1,0 +1,230 @@
+[
+  {
+    "task_id": "Gencore",
+    "main": "__INSTALL_PATH__/bin/gencore",
+    "cmd": "${main}",
+    "cpu": 2,
+    "memory": 2,
+    "docker": {
+      "image": "bfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "report_cn",
+        "value": "./${parameters.html}",
+        "type": "File"
+      },
+      {
+        "key": "report_en",
+        "value": "./${parameters.html}",
+        "type": "File"
+      },
+      {
+        "key": "result",
+        "value": "./",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "input_bam",
+        "map_key": "--in",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Input bam",
+        "display_name_cn": "输入bam文件",
+        "description_en": "Input bam",
+        "description_cn": "输入bam文件",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.bam}",
+        "file_filter": "*.bam"
+      },{
+        "order": 2,
+        "key": "out",
+        "map_key": "--out",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output bam",
+        "display_name_cn": "输出bam文件",
+        "description_en": "Output bam",
+        "description_cn": "输出bam文件",
+        "validation_rule": "",
+        "default": "out.bam",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "ref",
+        "map_key": "--ref",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Ref",
+        "display_name_cn": "参考序列",
+        "description_en": "Ref",
+        "description_cn": "参考序列",
+        "validation_rule": "",
+        "default": "/mnt/sdc/pipeline_database/hg19/hg19.fasta",
+        "value_from": ""
+      },
+      {
+        "order": 4,
+        "key": "bed",
+        "map_key": "--bed",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Bed path",
+        "display_name_cn": "Bed文件路径",
+        "description_en": "Bed path",
+        "description_cn": "Bed文件路径",
+        "validation_rule": "",
+        "default": "/mnt/sdc/pipeline_database/hg19/BGI_Exome_V4_kit.bed",
+        "value_from": ""
+      },
+      {
+        "order": 5,
+        "key": "supporting_reads",
+        "map_key": "--supporting_reads",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "Supporting reads",
+        "display_name_cn": "Supporting reads",
+        "description_en": "Supporting reads",
+        "description_cn": "Supporting reads",
+        "validation_rule": "",
+        "default": 1,
+        "value_from": ""
+      },
+      {
+        "order": 6,
+        "key": "html",
+        "map_key": "--html",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Output html",
+        "display_name_cn": "输出的html文件",
+        "description_en": "Output html",
+        "description_cn": "输出的html文件",
+        "validation_rule": "",
+        "default": "gencore.html",
+        "value_from": ""
+      },
+      {
+        "order": 6,
+        "key": "json",
+        "map_key": "--json",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Output json",
+        "display_name_cn": "输出的json文件",
+        "description_en": "Output json",
+        "description_cn": "输出的json文件",
+        "validation_rule": "",
+        "default": "gencore.json",
+        "value_from": ""
+      },
+      {
+        "order": 7,
+        "key": "ratio_threshold",
+        "map_key": "--ratio_threshold",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Ratio threshold",
+        "display_name_cn": "Ratio threshold",
+        "description_en": "Ratio threshold",
+        "description_cn": "Ratio threshold",
+        "validation_rule": "",
+        "default": "0.8",
+        "value_from": ""
+      },
+      {
+        "order": 8,
+        "key": "score_threshold",
+        "map_key": "--score_threshold",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "Score threshold",
+        "display_name_cn": "Score threshold",
+        "description_en": "Score threshold",
+        "description_cn": "Score threshold",
+        "validation_rule": "",
+        "default": 6,
+        "value_from": ""
+      },
+      {
+        "order": 9,
+        "key": "high_qual",
+        "map_key": "--high_qual",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "High qual",
+        "display_name_cn": "High qual",
+        "description_en": "High qual",
+        "description_cn": "High qual",
+        "validation_rule": "",
+        "default": 30,
+        "value_from": ""
+      },
+      {
+        "order": 10,
+        "key": "moderate_qual",
+        "map_key": "--moderate_qual",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "moderate_qual",
+        "display_name_cn": "moderate_qual",
+        "description_en": "moderate_qual",
+        "description_cn": "moderate_qual",
+        "validation_rule": "",
+        "default": 20,
+        "value_from": ""
+      },
+      {
+        "order": 11,
+        "key": "low_qual",
+        "map_key": "--low_qual",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "low_qual",
+        "display_name_cn": "low_qual",
+        "description_en": "low_qual",
+        "description_cn": "low_qual",
+        "validation_rule": "",
+        "default": 10,
+        "value_from": ""
+      },
+      {
+        "order": 12,
+        "key": "coverage_sampling",
+        "map_key": "--coverage_sampling",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "coverage_sampling",
+        "display_name_cn": "coverage_sampling",
+        "description_en": "coverage_sampling",
+        "description_cn": "coverage_sampling",
+        "validation_rule": "",
+        "default": 10000,
+        "value_from": ""
+      }
+    ],
+    "input": [
+      {
+        "key": "files.bam",
+        "type": "File",
+        "file_filter": "*.bam"
+      }
+    ],
+    "output": [
+      {
+        "key": "files.bam",
+        "type": "File",
+        "pattern": "*bam"
+      }
+    ]
+  }
+]

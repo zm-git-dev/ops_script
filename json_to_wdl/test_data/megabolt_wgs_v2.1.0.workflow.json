@@ -1,0 +1,12 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "megabolt_wgs_v2_1_0",
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Megabolt_wgs_v2_1_0"
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+[
+   {
+      "steps": [
+         {
+            "run_type": "scatter", 
+            "task_id": "Bwa_mem"
+         }
+      ], 
+      "workflow_name": "bwa_mem", 
+      "workflow_code": "AP12939202304"
+   }
+]

@@ -1,0 +1,199 @@
+[
+  {
+    "task_id": "Fastp",
+    "main": "__INSTALL_PATH__/bin/fastp",
+    "cmd": "cat `dirname ${main}`/../version.txt; ${main}",
+    "cpu": 2,
+    "memory": 2,
+    "docker": {
+      "image": "bfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "report_cn",
+        "value": "./${parameters.html}",
+        "type": "File"
+      },
+      {
+        "key": "report_en",
+        "value": "./${parameters.html}",
+        "type": "File"
+      },
+      {
+        "key": "result",
+        "value": "./",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "read1",
+        "map_key": "--in1",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Read1 path",
+        "display_name_cn": "1链数据路径",
+        "description_en": "Read1 path",
+        "description_cn": "1链数据路径",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.read1}",
+        "file_filter": "*.fq.gz,*fq"
+      },{
+        "order": 1,
+        "key": "out1",
+        "map_key": "--out1",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Clean read1 path",
+        "display_name_cn": "输出1链数据路径",
+        "description_en": "Clean read1 path",
+        "description_cn": "1链数据路径",
+        "validation_rule": "",
+        "default": "read1.fq.gz",
+        "value_from": ""
+      },
+      {
+        "order": 1,
+        "key": "adapter_sequence",
+        "map_key": "--adapter_sequence",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Adapter sequence1",
+        "display_name_cn": "1链接头序列",
+        "description_en": "Adapter sequence1",
+        "description_cn": "1链接头序列",
+        "validation_rule": "",
+        "default": "AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "read2",
+        "map_key": "--in2",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Read2 path",
+        "display_name_cn": "2链数据路径",
+        "description_en": "Read2 path",
+        "description_cn": "2链数据路径",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.read2}",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "order": 3,
+        "key": "out2",
+        "map_key": "--out2",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Clean Read2 path",
+        "display_name_cn": "输出2链数据路径",
+        "description_en": "Clean Read2 path",
+        "description_cn": "输出2链数据路径",
+        "validation_rule": "",
+        "default": "read2.fq.gz",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "adapter_sequence_r2",
+        "map_key": "--adapter_sequence_r2",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Adapter sequence2",
+        "display_name_cn": "2链接头序列",
+        "description_en": "Adapter sequence2",
+        "description_cn": "2链接头序列",
+        "validation_rule": "",
+        "default": "AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "html",
+        "map_key": "--html",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Output html",
+        "display_name_cn": "输出报告名",
+        "description_en": "Output html",
+        "description_cn": "输出报告名",
+        "validation_rule": "",
+        "default": "report.html",
+        "value_from": ""
+      },
+      {
+        "order": 4,
+        "key": "compression",
+        "map_key": "--compression",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Compression",
+        "display_name_cn": "Compression",
+        "description_en": "Compression",
+        "description_cn": "Compression",
+        "validation_rule": "",
+        "default": "4",
+        "value_from": ""
+      },
+      {
+        "order": 6,
+        "key": "qualified_quality_phred",
+        "map_key": "--qualified_quality_phred",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "qualified_quality_phred",
+        "display_name_cn": "qualified_quality_phred",
+        "description_en": "qualified_quality_phred",
+        "description_cn": "qualified_quality_phred",
+        "validation_rule": "",
+        "default": 15,
+        "value_from": ""
+      },
+      {
+        "order": 7,
+        "key": "unqualified_percent_limit",
+        "map_key": "--unqualified_percent_limit",
+        "type": "Int",
+        "required": false,
+        "display_name_en": "unqualified_percent_limit",
+        "display_name_cn": "unqualified_percent_limit",
+        "description_en": "unqualified_percent_limit",
+        "description_cn": "unqualified_percent_limit",
+        "validation_rule": "",
+        "default": 40,
+        "value_from": ""
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "pattern": "*1.fq.gz"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "pattern": "*1.fq.gz"
+      }
+    ]
+  }
+]

@@ -1,0 +1,55 @@
+[{
+    "task_id": "Seqtk_sample",
+    "main": "",
+    "cmd": "",
+    "cpu": 4,
+    "memory": 40,
+    "docker": {
+        "image": "",
+        "volumns": [
+            "/storeData/db:/data/pipeline/pfi/db"
+        ]
+    },
+    "outputs": [
+        {
+            "key": "result",
+            "value": "./",
+            "type": "Folder"
+        }
+    ],
+    "parameters": [
+        {
+            "order": 1,
+            "key": "s",
+            "map_key": "-s",
+            "type": "String",
+            "required": false,
+            "display_name_en": "RNG seed",
+            "display_name_cn": "RNG seed",
+            "description_en": "RNG seed",
+            "description_cn": "RNG seed",
+            "validation_rule": "",
+            "default": "11",
+            "value_from": ""
+        },
+        {
+            "order": 2,
+            "key": "2_pass_mode",
+            "map_key": "",
+            "type": "String",
+            "required": false,
+            "display_name_en": "2-pass mode",
+            "display_name_cn": "2-pass mode",
+            "description_en": "2-pass mode",
+            "description_cn": "2-pass mode",
+            "validation_rule": [
+                "True",
+                "False"
+            ],
+            "default": "False",
+            "value_from": ""
+        }
+    ],
+    "input_files": []
+}
+]

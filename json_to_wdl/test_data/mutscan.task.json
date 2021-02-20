@@ -1,0 +1,133 @@
+[
+  {
+    "task_id": "Mutscan",
+    "main": "__INSTALL_PATH__/bin/mutscan",
+    "cmd": "${main}",
+    "cpu": 2,
+    "memory": 2,
+    "docker": {
+      "image": "bfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "report_cn",
+        "value": "./${parameters.html}",
+        "type": "File"
+      },
+      {
+        "key": "report_en",
+        "value": "./${parameters.html}",
+        "type": "File"
+      },
+      {
+        "key": "result",
+        "value": "./",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "read1",
+        "map_key": "--read1",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Read1 path",
+        "display_name_cn": "1链数据路径",
+        "description_en": "Read1 path",
+        "description_cn": "1链数据路径",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.read1}",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "order": 2,
+        "key": "read2",
+        "map_key": "--read2",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Read2 path",
+        "display_name_cn": "2链数据路径",
+        "description_en": "Read2 path",
+        "description_cn": "2链数据路径",
+        "validation_rule": "",
+        "default": "",
+        "value_from": "${sample.metadata.files.read2}",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "order": 3,
+        "key": "html",
+        "map_key": "--html",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output html",
+        "display_name_cn": "输出报告名",
+        "description_en": "Output html",
+        "description_cn": "输出报告名",
+        "validation_rule": "",
+        "default": "genefuse.html",
+        "value_from": ""
+      },
+      {
+        "order": 4,
+        "key": "json",
+        "map_key": "--json",
+        "type": "String",
+        "required": false,
+        "display_name_en": "Output json",
+        "display_name_cn": "输出json文件",
+        "description_en": "Output json",
+        "description_cn": "输出json文件",
+        "validation_rule": "",
+        "default": "genefuse.json",
+        "value_from": ""
+      },
+      {
+        "order": 5,
+        "key": "ref",
+        "map_key": "--ref",
+        "type": "String",
+        "required": true,
+        "display_name_en": "reference",
+        "display_name_cn": "参考序列",
+        "description_en": "reference",
+        "description_cn": "参考序列",
+        "validation_rule": "",
+        "default": "/mnt/sdc/pipeline_database/hg19/hg19.fasta",
+        "value_from": ""
+      },
+      {
+        "order": 6,
+        "key": "vcf",
+        "map_key": "--vcf",
+        "type": "String",
+        "required": true,
+        "display_name_en": "vcf",
+        "display_name_cn": "vcf",
+        "description_en": "vcf",
+        "description_cn": "vcf",
+        "validation_rule": "",
+        "default": "/mnt/sdc/pipeline_database/hg19/dbsnp_151.vcf.gz",
+        "value_from": ""
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": []
+  }
+]

@@ -1,0 +1,356 @@
+[
+  {
+    "task_id": "Sentieon_tnseq",
+    "main": "/home/sentieon/sentieon-genomics-201911/bin/sentieon",
+    "cmd": "${main} driver",
+    "cpu": 4,
+    "memory": 10,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+          "type": "Folder",
+          "value": "./",
+          "key": "result"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "threads",
+        "map_key": "-t",
+        "type": "Int",
+        "required": true,
+        "display_name_en": "Number of threads",
+        "display_name_cn": "线程数",
+        "description_en": "Number of threads",
+        "description_cn": "线程数",
+        "validation_rule": "",
+        "default": 4,
+        "value_from": ""
+      },
+      {
+        "order": 1,
+        "key": "reference",
+        "map_key": "-r",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Reference",
+        "display_name_cn": "参考序列",
+        "description_en": "Reference file (FASTA)",
+        "description_cn": "参考序列",
+        "validation_rule": "",
+        "default": "/home/sentieon/sentieon_quickstart/reference/ucsc.hg19_chr22.fasta",
+        "value_from": ""
+      },
+      {
+          "description_cn": "肿瘤和正常样本输入文件",
+          "key": "tumor_normal_files",
+          "required": false,
+          "value_from": "code#def getname(samples=${samples}):\n  normal = ''\n  tumor = ''\n  for s in samples:\n    m = s.get('metadata', {})\n    if s.get('metadata', {}).get('tumor_normal') == 'normal':\n      normal = ' -i ' + m.get('bam_file') + ' -q ' + m.get('recal_data_table')\n    if s.get('metadata', {}).get('tumor_normal') == 'tumor':\n      tumor = ' -i ' + m.get('bam_file') + ' -q ' + m.get('recal_data_table')\n  return normal + tumor#",
+          "default": "",
+          "map_key": "",
+          "description_en": "tumor and normal sample files",
+          "type": "String",
+          "order": 2,
+          "display_name_cn": "肿瘤和正常样本输入文件",
+          "display_name_en": "tumor and normal sample files",
+          "validation_rule": ""
+       },
+      {
+        "order": 2,
+        "key": "algo",
+        "map_key": "--algo",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Algo",
+        "display_name_cn": "Algo",
+        "description_en": "Algo",
+        "description_cn": "Algo",
+        "validation_rule": "",
+        "default": "TNhaplotyper2",
+        "value_from": ""
+      },
+      {
+        "order": 2,
+        "key": "out_tn_vcf",
+        "map_key": "",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output TN Vcf",
+        "display_name_cn": "输出文件",
+        "description_en": "Output TN Vcf",
+        "description_cn": "输出文件",
+        "validation_rule": "",
+        "default": "out_tn.vcf",
+        "value_from": ""
+      },
+      {
+          "description_cn": "肿瘤和正常样本名",
+          "key": "tumor_normal",
+          "required": false,
+          "value_from": "code#def getname(samples=${samples}):\n  normal = ''\n  tumor = ''\n  for s in samples:\n    m = s.get('metadata', {})\n    if s.get('metadata', {}).get('tumor_normal') == 'normal':\n      normal = ' --normal_sample ' + s.get('sample_id')\n    if s.get('metadata', {}).get('tumor_normal') == 'tumor':\n      tumor = ' --tumor_sample ' + s.get('sample_id')\n  return normal + tumor#",
+          "default": "",
+          "map_key": "",
+          "description_en": "tumor and normal sample name",
+          "type": "String",
+          "order": 3,
+          "display_name_cn": "肿瘤和正常样本名",
+          "display_name_en": "tumor and normal sample name",
+          "validation_rule": ""
+       },{
+            "order": 6,
+            "key": "min_base_qual",
+            "map_key": "--min_base_qual",
+            "type": "String",
+            "required": false,
+            "display_name_en": "min_base_qual",
+            "display_name_cn": "min_base_qual",
+            "description_en": "base quality to consider (default: 10)",
+            "description_cn": "base quality to consider (default: 10)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 6,
+            "key": "pcr_indel_model",
+            "map_key": "--pcr_indel_model",
+            "type": "String",
+            "required": false,
+            "display_name_en": "pcr_indel_model",
+            "display_name_cn": "pcr_indel_model",
+            "description_en": "indel error model: none, hostile, aggressive, or conservative (default: conservative)",
+            "description_cn": "indel error model: none, hostile, aggressive, or conservative (default: conservative)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 6,
+            "key": "prune_factor",
+            "map_key": "--prune_factor",
+            "type": "String",
+            "required": false,
+            "display_name_en": "prune_factor",
+            "display_name_cn": "prune_factor",
+            "description_en": "factor in the kmer graph (default: 2)",
+            "description_cn": "factor in the kmer graph (default: 2)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 6,
+            "key": "germline_vcf",
+            "map_key": "--germline_vcf",
+            "type": "String",
+            "required": false,
+            "display_name_en": "germline_vcf",
+            "display_name_cn": "germline_vcf",
+            "description_en": "VCF file contains allele frequency",
+            "description_cn": "VCF file contains allele frequency",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 7,
+            "key": "default_af",
+            "map_key": "--default_af",
+            "type": "String",
+            "required": false,
+            "display_name_en": "default_af",
+            "display_name_cn": "default_af",
+            "description_en": "af value if allele is not found in germline vcf (default: 0.001)",
+            "description_cn": "af value if allele is not found in germline vcf (default: 0.001)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 8,
+            "key": "max_germline_af",
+            "map_key": "--max_germline_af",
+            "type": "String",
+            "required": false,
+            "display_name_en": "max_germline_af",
+            "display_name_cn": "max_germline_af",
+            "description_en": "germline allele frequency in tumor-only mode (default: 0.01)",
+            "description_cn": "germline allele frequency in tumor-only mode (default: 0.01)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 9,
+            "key": "pon",
+            "map_key": "--pon",
+            "type": "String",
+            "required": false,
+            "display_name_en": "pon",
+            "display_name_cn": "pon",
+            "description_en": "file",
+            "description_cn": "file",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 10,
+            "key": "call_pon_sites",
+            "map_key": "--call_pon_sites",
+            "type": "String",
+            "required": false,
+            "display_name_en": "call_pon_sites",
+            "display_name_cn": "call_pon_sites",
+            "description_en": "to call candidates even in the PoN",
+            "description_cn": "to call candidates even in the PoN",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 11,
+            "key": "min_init_tumor_lod",
+            "map_key": "--min_init_tumor_lod",
+            "type": "String",
+            "required": false,
+            "display_name_en": "min_init_tumor_lod",
+            "display_name_cn": "min_init_tumor_lod",
+            "description_en": "Minimum tumorLOD for candidate selection (default: 2.0)",
+            "description_cn": "Minimum tumorLOD for candidate selection (default: 2.0)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 12,
+            "key": "min_normal_lod",
+            "map_key": "--min_normal_lod",
+            "type": "String",
+            "required": false,
+            "display_name_en": "min_normal_lod",
+            "display_name_cn": "min_normal_lod",
+            "description_en": "normalLOD (default: 2.2)",
+            "description_cn": "normalLOD (default: 2.2)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 13,
+            "key": "tumor_contamination_frac",
+            "map_key": "--tumor_contamination_frac",
+            "type": "String",
+            "required": false,
+            "display_name_en": "tumor_contamination_frac",
+            "display_name_cn": "tumor_contamination_frac",
+            "description_en": "Estimated tumor contamination fraction (default: 0.)",
+            "description_cn": "Estimated tumor contamination fraction (default: 0.)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 14,
+            "key": "normal_contamination_frac",
+            "map_key": "--normal_contamination_frac",
+            "type": "String",
+            "required": false,
+            "display_name_en": "normal_contamination_frac",
+            "display_name_cn": "normal_contamination_frac",
+            "description_en": "Estimated normal contamination fraction (default: 0.)",
+            "description_cn": "Estimated normal contamination fraction (default: 0.)",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         },
+         {
+            "order": 15,
+            "key": "trim_soft_clip",
+            "map_key": "--trim_soft_clip",
+            "type": "String",
+            "required": false,
+            "display_name_en": "trim_soft_clip",
+            "display_name_cn": "trim_soft_clip",
+            "description_en": "off soft-clipped bases",
+            "description_cn": "off soft-clipped bases",
+            "validation_rule": "",
+            "default": "",
+            "value_from": ""
+         }
+    ],
+    "input_files": [
+      {
+        "file_name": "sampleList",
+        "no_need_create": true,
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.tumor_normal}",
+            "required": true,
+            "display_name_cn": "肿瘤-对照",
+            "validation_rule":["tumor", "normal"],
+            "display_name_en": "Tumor-Normal"
+          },
+          {
+            "value_from": "${sample.metadata.group_id}",
+            "required": true
+          },
+          {
+            "key": "tumor_realign_bam",
+            "map_key": "-i",
+            "type": "File",
+            "required": true,
+            "display_name_en": "Realign Bam",
+            "display_name_cn": "样本bam文件",
+            "description_en": "Read sequence input file (BAM/CRAM)",
+            "description_cn": "样本bam文件",
+            "validation_rule": "",
+            "default": "",
+            "value_from": "${sample.metadata.bam_file}"
+          },
+          {
+            "key": "Tumor_recal_data_table",
+            "map_key": "-q",
+            "type": "File",
+            "required": true,
+            "display_name_en": "Recal Data Table",
+            "display_name_cn": "样本BSQR文件",
+            "description_en": "Base quality calibration table",
+            "description_cn": "样本BSQR文件",
+            "validation_rule": "",
+            "default": "",
+            "value_from": "${sample.metadata.recal_data_table}"
+          }
+        ]
+      }
+    ],
+    "input": [
+      {
+        "key": "bam_file",
+        "type": "File",
+        "file_filter": "*.bam"
+      },
+      {
+        "key": "recal_data_table",
+        "type": "File",
+        "file_filter": "*"
+      }
+    ],
+    "output": [
+        {
+             "key": "files.vcf_file",
+             "type": "File",
+             "pattern": "*vcf$"
+       }
+    ]
+  }
+]

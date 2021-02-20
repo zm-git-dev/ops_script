@@ -1,0 +1,12 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "accur_seq_pgs",
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "AccuR_Seq_PGS"
+      }
+    ]
+  }
+]

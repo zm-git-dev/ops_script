@@ -1,0 +1,19 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "sentieon_rna_variant",
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Sentieon_split_bam"
+      },
+      {
+        "run_type": "scatter",
+        "task_id": "Sentieon_rna_variant",
+        "input_mapping": {
+          "split_bam": "Sentieon_split_bam.output_bam"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "sentieon_tnscope",
+    "batch_analysis": true,
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Sentieon_tnscope"
+      }
+    ]
+  }
+]

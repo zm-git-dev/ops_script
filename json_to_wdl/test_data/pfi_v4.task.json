@@ -1,0 +1,217 @@
+[
+  {
+    "task_id": "Pfi_V4_3",
+    "main": "/mnt/disk0/pipeline/PFI/bin/easy_run_local",
+    "cmd": "${main} ${input_files.sampleList}",
+    "cpu": 4,
+    "memory": 100,
+    "docker": {
+      "image": "pfi:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outdir}/Result",
+        "file_pattern": "[*]",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "host",
+        "map_key": "--db_host",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Host",
+        "display_name_cn": "宿主",
+        "description_en": "Host",
+        "description_cn": "宿主",
+        "validation_rule": ["Human","Mouse", "Rat", "Carp", "Goose", "Goat", "Sheep", "Scrofa", "Cat", "Chicken", "Cow","Dog", "Duck", "Rabbit"],
+        "default": "",
+        "value_from": "${sample.metadata.host}"
+      },
+      {
+        "order": 2,
+        "key": "db_kraken",
+        "map_key": "--db_kraken",
+        "type": "String",
+        "required": true,
+        "display_name_en": "DB kraken",
+        "display_name_cn": "比对数据库",
+        "description_en": "DB kraken",
+        "description_cn": "比对数据库",
+        "validation_rule": ["all", "mini"],
+        "default": "all",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "adaptor3",
+        "map_key": "--adaptor3",
+        "type": "String",
+        "required": false,
+        "display_name_en": "adaptor3",
+        "display_name_cn": "3端接头序列",
+        "description_en": "Adapter sequence of fq1 file",
+        "description_cn": "3端接头序列",
+        "validation_rule": "",
+        "default": "AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA",
+        "value_from": ""
+      },
+      {
+        "order": 5,
+        "key": "adaptor5",
+        "map_key": "--adaptor5",
+        "type": "String",
+        "required": false,
+        "display_name_en": "adaptor5",
+        "display_name_cn": "5端接头序列",
+        "description_en": "Adapter sequence of fq2 file",
+        "description_cn": "5端接头序列",
+        "validation_rule": "",
+        "default": "AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG",
+        "value_from": ""
+      },
+      {
+        "order": 6,
+        "key": "lowQual",
+        "map_key": "--lowQual",
+        "type": "String",
+        "required": false,
+        "display_name_en": "lowQual",
+        "display_name_cn": "lowQual",
+        "description_en": "Low quality threshold [default:15]",
+        "description_cn": "Low quality threshold [default:15]",
+        "validation_rule": "",
+        "default": "15",
+        "value_from": ""
+      },
+      {
+        "order": 7,
+        "key": "qualRate",
+        "map_key": "--qualRate",
+        "type": "String",
+        "required": false,
+        "display_name_en": "qualRate",
+        "display_name_cn": "qualRate",
+        "description_en": "Low quality rate [default:0.2]",
+        "description_cn": "Low quality rate [default:0.2]",
+        "validation_rule": "",
+        "default": "0.2",
+        "value_from": ""
+      },
+      {
+        "order": 8,
+        "key": "nRate",
+        "map_key": "--nRate",
+        "type": "String",
+        "required": false,
+        "display_name_en": "nRate",
+        "display_name_cn": "nRate",
+        "description_en": "N rate threshold [default:0.05]",
+        "description_cn": "N rate threshold [default:0.05]",
+        "validation_rule": "",
+        "default": "0.05",
+        "value_from": ""
+      },
+      {
+        "order": 9,
+        "key": "seqType",
+        "map_key": "--seqType",
+        "type": "String",
+        "required": false,
+        "display_name_en": "seqType",
+        "display_name_cn": "seqType",
+        "description_en": "Sequence fq name type, 0->old fastq name, 1->new fastq name [0]",
+        "description_cn": "Sequence fq name type, 0->old fastq name, 1->new fastq name [0]",
+        "validation_rule": ["0", "1"],
+        "default": "0",
+        "value_from": ""
+      },
+      {
+        "order": 10,
+        "key": "qualSys",
+        "map_key": "--qualSys",
+        "type": "String",
+        "required": false,
+        "display_name_en": "qualSys",
+        "display_name_cn": "qualSys",
+        "description_en": "Quality system 1:64, 2:33[default:2]",
+        "description_cn": "Quality system 1:64, 2:33[default:2]",
+        "validation_rule": "",
+        "default": "2",
+        "value_from": ""
+      },
+      {
+        "order": 11,
+        "key": "outdir",
+        "map_key": "--outdir",
+        "type": "String",
+        "required": true,
+        "ui_no_need": true,
+        "display_name_en": "Output dir",
+        "display_name_cn": "输出路径",
+        "description_en": "Output dir",
+        "description_cn": "输出路径",
+        "validation_rule": "",
+        "default": "result",
+        "value_from": ""
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sampleList",
+        "barcode_files_type": "EACH_LINE",
+        "column_separator": "\t",
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.sample_source}",
+            "validation_rule": ["DNA", "RNA"],
+            "required": true
+          },
+          {
+            "value_from": "${sample.metadata.files.read1}",
+            "file_filter": "*.fq.gz,*fq",
+            "required": true
+          },
+          {
+            "value_from": "${sample.metadata.files.read2}",
+            "file_filter": "*.fq.gz,*fq",
+            "required": false
+          }
+        ]
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "pattern": "*_1.fq.gz$"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "pattern": "*_2.fq.gz$"
+      }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "mgap_tree",
+    "batch_analysis": true,
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "Mgap_tree"
+      }
+    ]
+  }
+]

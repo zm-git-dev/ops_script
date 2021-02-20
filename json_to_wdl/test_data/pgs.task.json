@@ -1,0 +1,245 @@
+[
+  {
+    "task_id": "AccuR_Seq_PGS",
+    "main": "/data/pipeline/AccuR-Seq_PGS/bin/Onestep-PGS.pl",
+    "cmd": "export PERL5LIB='/data/pipeline/AccuR-Seq_PGS/localperl/lib/site_perl/5.14.2/';export PYTHONPATH=$PYTHONPATH:/data/pipeline/AccuR-Seq_PGS/site-packages; perl ${main} -in ${input_files.sample_fq} -info ${input_files.sample_text} ",
+    "cpu": 16,
+    "memory": {
+      "value_from": "code#def getmemory(samples=${samples}):\n  n=len(samples)\n  return 100 if (n * 5.27 > 100) else n*5.27#",
+      "default": 10,
+      "type": "Int"
+    },
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outdir}/result",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+      {
+        "order": 1,
+        "key": "size",
+        "map_key": "-size",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Cnv Size",
+        "display_name_cn": "Cnv Size",
+        "description_en": "The cnv size[default 4M,16M]",
+        "description_cn": "cnv大小[默认值： 4M,16M]",
+        "validation_rule": "",
+        "default": "4M,16M",
+        "value_from": ""
+      },
+      {
+        "order": 2,
+        "key": "control",
+        "map_key": "-control",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Control",
+        "display_name_cn": "Control",
+        "description_en": "Process Initialization Y or N",
+        "description_cn": "Process Initialization Y or N",
+        "validation_rule": ["Y", "N"],
+        "default": "N",
+        "value_from": ""
+      },
+      {
+        "order": 3,
+        "key": "correct",
+        "map_key": "-correct",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Correct",
+        "display_name_cn": "Correct",
+        "description_en": "control correct Y or N",
+        "description_cn": "control correct Y or N",
+        "validation_rule": ["Y", "N"],
+        "default": "Y",
+        "value_from": ""
+      },
+      {
+        "order": 4,
+        "key": "outdir",
+        "map_key": "-o",
+        "type": "String",
+        "required": true,
+        "display_name_en": "Output dir",
+        "display_name_cn": "输出路径",
+        "description_en": "Output dir",
+        "description_cn": "输出路径",
+        "validation_rule": "",
+        "default": "result",
+        "value_from": ""
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sample_fq",
+        "codes": [
+           "import re",
+           "def get_fq_lines(samples):",
+           "    fq_line = \"name slide lane barcode path\\n\"",
+           "    samples_len = len(samples)",
+           "    for sample in samples:",
+           "        for i in range(len(sample['read1'])):",
+           "            line = sample['read1'][i]",
+           "            metadata = sample['metadata']",
+           "            for key in metadata:",
+           "                if metadata.get(key) is None:",
+           "                    metadata[key] = \"\"",
+           "            match = re.match(r'(.*)/(.*)_([0-9a-zA-Z]*)_([0-9]*).fq.gz', line)",
+           "            fq_line += \"%s %s %s %s %s\" % (sample['sample_id'],match.group(2),match.group(3),match.group(4),line)",
+           "            if samples_len != 1 or i != (len(sample['read1'])-1):",
+           "                fq_line += \"\\n\"",
+           "        samples_len -= 1",
+           "    return fq_line"
+        ]
+      },
+      {
+        "file_name": "sample_text",
+         "codes": [
+            "import re",
+            "def get_text_line(samples):",
+            "    samples_len = len(samples)",
+            "    text_line = \"\"",
+            "    for sample in samples:",
+            "        for i in range(len(sample['read1'])):",
+            "            line = sample['read1'][i]",
+            "            sample_name = sample['sample_id']",
+            "            match = re.match(r'(.*)/(.*).fq.gz', line)",
+            "            sample_name = sample_name + \"_\" + match.group(2)",
+            "            metadata = sample['metadata']",
+            "            for key in metadata:",
+            "                if metadata.get(key) is None:",
+            "                    metadata[key]=\"\"",
+            "            text_line += \"Sample Name:\"+sample_name+\"\\n\"+\"Female Name:\"+metadata.get(\"female_name\",\"\")+\"\\n\"+\"Female Birth Date:\"+metadata.get(\"female_birth_date\",\"\")+\"\\n\"+\"Male Name:\"+metadata.get(\"male_name\",\"\")            +\"\\n\"+\"Male Birth Date:\"+metadata.get(\"male_birth_date\",\"\")+\"\\n\"+\"Detect Reason:\"+metadata.get(\"detect_reason\",\"\")+\"\\n\"+\"EmbryoID:\"+metadata.get(\"embryoID\",\"\")+\"\\n\"+\"Embryo Biopsy Stage:\"+metadata.get(\"embryo_biopsy_stage\",\"\")            +\"\\n\"+\"Biopsy Date:\"+metadata.get(\"biopsy_date\",\"\")+\"\\n\"+\"Contact Name:\"+metadata.get(\"contact_name\",\"\")+\"\\n\"+\"Phone Number:\"+metadata.get(\"phone_number\",\"\")",
+            "            if samples_len != 1 or i != (len(sample['read1'])-1):",
+            "                text_line += \"\\n\"",
+            "        samples_len -= 1",
+            "    return text_line"
+         ]
+      },
+      {
+        "file_name": "params_file",
+        "no_need_create": true,
+        "columns": [
+          {
+            "value_from": "${sample.metadata.files.read1}",
+            "file_filter": "*.fq.gz"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Female Birth Date",
+            "display_name_cn": "女方出生年月",
+            "description_en": "Female Birth Date",
+            "description_cn": "女方出生年月",
+            "value_from": "${sample.metadata.female_birth_date}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Female Name",
+            "display_name_cn": "女方姓名",
+            "description_en": "Female Name",
+            "description_cn": "女方姓名",
+            "value_from": "${sample.metadata.female_name}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Male Name",
+            "display_name_cn": "男方姓名",
+            "description_en": "Male Name",
+            "description_cn": "男方姓名",
+            "value_from": "${sample.metadata.male_name}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Male Birth Date",
+            "display_name_cn": "男方出生年月",
+            "description_en": "Male Birth Date",
+            "description_cn": "男方出生年月",
+            "value_from": "${sample.metadata.male_birth_date}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Contact Name",
+            "display_name_cn": "联系人姓名",
+            "description_en": "Contact Name",
+            "description_cn": "联系人姓名",
+            "value_from": "${sample.metadata.contact_name}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Phone Number",
+            "display_name_cn": "联系人电话",
+            "description_en": "Phone Number",
+            "description_cn": "联系人电话",
+            "value_from": "${sample.metadata.phone_number}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Detect Reason",
+            "display_name_cn": "检测原因",
+            "description_en": "Detect Reason",
+            "description_cn": "检测原因",
+            "value_from": "${sample.metadata.detect_reason}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "EmbryoID",
+            "display_name_cn": "胚胎编号",
+            "description_en": "EmbryoID",
+            "description_cn": "胚胎编号",
+            "value_from": "${sample.metadata.embryoID}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Embryo Biopsy Stage",
+            "display_name_cn": "胚胎活检阶段",
+            "description_en": "Embryo Biopsy Stage",
+            "description_cn": "胚胎活检阶段",
+            "value_from": "${sample.metadata.embryo_biopsy_stage}"
+          },
+          {
+            "type": "String",
+            "required": false,
+            "display_name_en": "Biopsy Date",
+            "display_name_cn": "活检日期",
+            "description_en": "Biopsy Date",
+            "description_cn": "活检日期",
+            "value_from": "${sample.metadata.biopsy_date}"
+          }
+        ]
+      }
+    ],
+    "archive_rules": [
+      {
+         "codes": "def achive():\n    import re\n    import os\n    for i in range(len(sample['read1'])):\n        line = sample['read1'][i]\n        metadata = sample['metadata']\n        sample_id = sample['sample_id']\n        match = re.match(r'(.*)/(.*)_([0-9a-zA-Z]*)_([0-9]*).fq.gz', line)\n        flowcell_id = match.group(2)\n        lane_id = match.group(3)\n        barcode_id = match.group(4)\n        name = sample_id + \"_\" + flowcell_id + \"_\" + lane_id + \"_\" + barcode_id\n        path = origin_path + \"/REPORT/\" + name + \"/4M/\"\n        cmd = \"cp \" + path + name + \"_en.html \" + path + sample_id + \"_en.html\"\n        os.system(cmd)\n        cmd = \"cp \" + path + name + \"_cn.html \" + path + sample_id + \"_cn.html\"\n        os.system(cmd)",
+         "origin_path": "${output.result}"
+      }
+   ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": []
+  }
+]

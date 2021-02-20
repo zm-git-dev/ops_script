@@ -1,0 +1,95 @@
+[
+   {
+      "cmd": "${main} index", 
+      "parameters": [
+         {
+            "description_en": "input fasta file",
+            "value_from": "${sample.metadata.files.fasta_file}",
+            "display_name_en": "input_fasta",
+            "description_cn": "input fasta file",
+            "key": "input_fasta",
+            "display_name_cn": "input_fasta",
+            "validation_rule": "",
+            "default": "",
+            "required": true,
+            "map_key": "",
+            "type": "String",
+            "order": 1
+         },
+         {
+            "description_en": "files named as <in.fasta>.64.* instead of <in.fasta>.*", 
+            "value_from": "", 
+            "display_name_en": "uuid_6",
+            "description_cn": "files named as <in.fasta>.64.* instead of <in.fasta>.*", 
+            "key": "uuid_6",
+            "display_name_cn": "uuid_6",
+            "validation_rule": "", 
+            "default": "", 
+            "required": false, 
+            "map_key": "-6", 
+            "type": "String", 
+            "order": 1
+         }, 
+         {
+            "description_en": "BWT construction algorithm: bwtsw, is or rb2 [auto]", 
+            "value_from": "", 
+            "display_name_en": "a", 
+            "description_cn": "BWT construction algorithm: bwtsw, is or rb2 [auto]", 
+            "key": "a", 
+            "display_name_cn": "a", 
+            "validation_rule": "", 
+            "default": "", 
+            "required": false, 
+            "map_key": "-a", 
+            "type": "String", 
+            "order": 2
+         }, 
+         {
+            "description_en": "prefix of the index [same as fasta name]", 
+            "value_from": "", 
+            "display_name_en": "p", 
+            "description_cn": "prefix of the index [same as fasta name]", 
+            "key": "p", 
+            "display_name_cn": "p", 
+            "validation_rule": "", 
+            "default": "", 
+            "required": false, 
+            "map_key": "-p", 
+            "type": "String", 
+            "order": 3
+         }, 
+         {
+            "description_en": "block size for the bwtsw algorithm (effective with -a bwtsw) [10000000]", 
+            "value_from": "", 
+            "display_name_en": "b", 
+            "description_cn": "block size for the bwtsw algorithm (effective with -a bwtsw) [10000000]", 
+            "key": "b", 
+            "display_name_cn": "b", 
+            "validation_rule": "", 
+            "default": "", 
+            "required": false, 
+            "map_key": "-b", 
+            "type": "String", 
+            "order": 4
+         }
+      ], 
+      "task_id": "Bwa_index", 
+      "memory": 4, 
+      "outputs": [
+         {
+            "type": "Folder", 
+            "value": "./", 
+            "key": "result"
+         }
+      ], 
+      "docker": {
+         "image": "bwa_index:v0.1", 
+         "volumns": [
+            "/storeData/db:/data/pipeline/pfi/db"
+         ]
+      }, 
+      "main": "/opt/biosoft/bwa/bin/bwa", 
+      "cpu": 4, 
+      "input_files": []
+   }
+]

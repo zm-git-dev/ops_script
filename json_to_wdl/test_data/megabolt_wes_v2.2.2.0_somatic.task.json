@@ -1,0 +1,550 @@
+[
+  {
+    "task_id": "Megabolt_wes_v2_2_2_0_somatic",
+    "main": "/usr/local/bin/MegaBOLT",
+    "cmd": "${main} --type somatic --runtype WES",
+    "cpu": 8,
+    "memory": 40,
+    "docker": {
+      "image": "megabolt:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "logs": [
+      "${parameters.outputdir}/megabolt.log",
+      "${parameters.outputdir}/megabolt.out"
+    ],
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outputdir}/",
+        "type": "Folder"
+      }
+    ],
+    "parameters": [
+   {
+      "description_cn": "切换参考物种",
+      "key": "switch_species",
+      "required": false,
+      "value_from": "${sample.metadata.wgs/wes_species}",
+      "default": "Human-hg19",
+      "map_key": "",
+      "description_en": "Switch Species",
+      "type": "String",
+      "order": 1,
+      "display_name_cn": "切换参考物种",
+      "display_name_en": "Switch Species",
+      "validation_rule": "",
+      "look_up_map": [{
+        "display_cn": "Human-hg19",
+        "display_en": "Human-hg19",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/hg19.fa --knownSites /mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.vcf.gz --knownSites /mnt/ssd/MegaBOLT_scheduler/reference/Mills_and_1000G_gold_standard.indels.hg19.vcf.gz --knownSites /mnt/ssd/MegaBOLT_scheduler/reference/1000G_phase1.indels.hg19.vcf.gz --bqsrindex /mnt/ssd/MegaBOLT_scheduler/reference/hg19.fa.vcfi --vcf /mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.vcf.gz  --resource-omni /mnt/ssd/MegaBOLT_scheduler/reference/1000G_omni2.5.hg19.vcf.gz --resource-mills /mnt/ssd/MegaBOLT_scheduler/reference/Mills_and_1000G_gold_standard.indels.hg19.vcf.gz --resource-1000G /mnt/ssd/MegaBOLT_scheduler/reference/1000G_phase1.snps.high_confidence.hg19.vcf.gz --resource-hapmap /mnt/ssd/MegaBOLT_scheduler/reference/hapmap_3.3.hg19.vcf.gz --resource-dbsnp /mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.vcf.gz"
+      },
+      {
+        "display_cn": "Human-hg38",
+        "display_en": "Human-hg38",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/hg38.fa --knownSites /mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.hg38.vcf.gz --knownSites /mnt/ssd/MegaBOLT_scheduler/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --knownSites /mnt/ssd/MegaBOLT_scheduler/reference/1000G_phase1.snps.high_confidence.hg38.vcf.gz --bqsrindex /mnt/ssd/MegaBOLT_scheduler/reference/hg38.fa.vcfi --vcf /mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.hg38.vcf.gz --resource-omni /mnt/ssd/MegaBOLT_scheduler/reference/1000G_omni2.5.hg38.vcf.gz --resource-mills /mnt/ssd/MegaBOLT_scheduler/reference/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz --resource-1000G /mnt/ssd/MegaBOLT_scheduler/reference/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource-hapmap /mnt/ssd/MegaBOLT_scheduler/reference/hapmap_3.3.hg38.vcf.gz --resource-dbsnp /mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.hg38.vcf.gz"
+      },
+      {
+        "display_cn": "Mouse-mm10",
+        "display_en": "Mouse-mm10",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/mm10/mm10.fasta"
+      },
+      {
+        "display_cn": "Rice-9311",
+        "display_en": "Rice-9311",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/Rice_9311/9311.ChrAll.fa"
+      },
+      {
+        "display_cn": "Arabidopsis-TAIR10",
+        "display_en": "Arabidopsis-TAIR10",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/Arabidopsis_thaliana_TAIR10/TAIR10.fa"
+      },
+      {
+        "display_cn": "Yeast",
+        "display_en": "Yeast",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/Yeast/GCA_000146045.2_R64_genomic.fa"
+      },
+      {
+        "display_cn": "Ecoli",
+        "display_en": "Ecoli",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/E.Coli/E.Coli.ATCC_8739.fa"
+      },
+      {
+        "display_cn": "HGC",
+        "display_en": "HGC",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/HGC/highGC.fa"
+      },
+      {
+        "display_cn": "LGC",
+        "display_en": "LGC",
+        "value": "--ref /mnt/ssd/MegaBOLT_scheduler/reference/others/LGC/GCA_000832985.1_ASM83298v1_genomic.fa"
+      }]
+   },
+   {
+      "description_cn": "output directory (default: .)",
+      "key": "outputdir",
+      "required": false,
+      "value_from": "",
+      "default": "result",
+      "map_key": "--outputdir",
+      "description_en": "output directory (default: .)",
+      "type": "String",
+      "order": 3,
+      "display_name_cn": "outputdir",
+      "display_name_en": "outputdir",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "不运行标记去重（MarkDup）（默认值： 0， 即默认运行）。", 
+      "key": "nomarkdup",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-markdup",
+      "description_en": "do not run markdup in sortmarkdup (default: 0)",
+      "type": "String",
+      "order": 4,
+      "display_name_cn": "no-markdup",
+      "display_name_en": "no-markdup",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "default": "BV4",
+      "value_from": "${sample.metadata.probe_type}",
+      "type": "String",
+      "description_cn": "hg19和hg38对应的区间文件（默认：BV4）",
+      "required": false,
+      "display_name_en": "bed",
+      "map_key": "--bed",
+      "key": "bed",
+      "display_name_cn": "bed",
+      "description_en": "bed file, only used for WES mode (default: BV4)",
+      "validation_rule": [
+         "ACV6",
+         "ACV6-38",
+         "AV2",
+         "AV2-38",
+         "AV5",
+         "AV5-38",
+         "AV6",
+         "AV6-38",
+         "AV7",
+         "AV7-38",
+         "AiJi",
+         "AiJi-38",
+         "BV4",
+         "BV4-38",
+         "BV5",
+         "BV5-38",
+         "IDT",
+         "IDT-38",
+         "NME",
+         "NME-38",
+         "NV3",
+         "NV3-38",
+         "TV1.2",
+         "TV1.2-38",
+         "user_defined_path"
+      ],
+      "order": 4
+   },
+   {
+      "description_cn": "不运行碱基质量值再校准（BQSR）（默认值：0，即默认运行）。", 
+      "key": "nobqsr",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-bqsr",
+      "description_en": "do not run bqsr in pipeline (default: 0)",
+      "type": "String",
+      "order": 5,
+      "display_name_cn": "no-bqsr",
+      "display_name_en": "no-bqsr",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "运行GenotypeGVCFs，仅当HaplotypeCaller输出GVCF有效（默认值：0，即默认不运行）。", 
+      "key": "rungenotypegvcfs",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--run-genotypegvcfs",
+      "description_en": "run GenotypeGVCFs in pipeline, only valid when output GVCF file for haplotypecaller (default: 0)",
+      "type": "String",
+      "order": 6,
+      "display_name_cn": "run-genotypegvcfs",
+      "display_name_en": "run-genotypegvcfs",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "运行VQSR（默认值：0，即默认不运行）。",
+      "key": "runvqsr",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--run-vqsr",
+      "description_en": "run vqsr in pipeline (default: 0)",
+      "type": "String",
+      "order": 7,
+      "display_name_cn": "run-vqsr",
+      "display_name_en": "run-vqsr",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "不输出过滤后的干净FASTQ文件（默认值：0，即默认输出）。", 
+      "key": "nofastqoutput",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-fastq-output",
+      "description_en": "do not output clean fastq file after filter in pipeline, only used when containing QC work (default: 0)",
+      "type": "String",
+      "order": 8,
+      "display_name_cn": "no-fastq-output",
+      "display_name_en": "no-fastq-output",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "不输出排序（去重）后的BAM文件（默认值：1，即默认不输出）。", 
+      "key": "nobamoutputforalignment",
+      "required": false,
+      "value_from": "",
+      "default": "1",
+      "map_key": "--no-bam-output-for-alignment",
+      "description_en": "do not output bam file of alignment (after SortMarkDup) in pipeline, only used when containing BQSR work (default: 1)",
+      "type": "String",
+      "order": 9,
+      "display_name_cn": "no-bam-output-for-alignment",
+      "display_name_en": "no-bam-output-for-alignment",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "当不运行BQSR时，不输出排序（去重）后的BAM文件（默认值：0，即默认输出）。", 
+      "key": "nobamoutputforsort",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-bam-output-for-sort",
+      "description_en": "do not output bam file of sort(markdup) in pipeline, only used when not containing BQSR work (default: 0)",
+      "type": "String",
+      "order": 10,
+      "display_name_cn": "no-bam-output-for-sort",
+      "display_name_en": "no-bam-output-for-sort",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "当运行BQSR时，不输出BQSR后的BAM文件（默认值：0，即默认输出）。", 
+      "key": "nobamoutputforbqsr",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-bam-output-for-bqsr",
+      "description_en": "do not output bam file of bqsr in pipeline, only used when containing BQSR work (default: 0)",
+      "type": "String",
+      "order": 11,
+      "display_name_cn": "no-bam-output-for-bqsr",
+      "display_name_en": "no-bam-output-for-bqsr",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "输出cram文件替代bam文件（默认值：0，即默认输出bam）。",
+      "key": "outputcram",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--output-cram",
+      "description_en": "output cram file instead of bam file (default: 0)",
+      "type": "String",
+      "order": 12,
+      "display_name_cn": "output-cram",
+      "display_name_en": "output-cram",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "用户自定义SOAPnuke参数", 
+      "key": "soapnukeparam",
+      "required": false,
+      "value_from": "",
+      "default": "",
+      "map_key": "--soapnuke-param",
+      "description_en": "user defined SOAPnuke parameter, used for qc filter",
+      "type": "String",
+      "order": 13,
+      "have_blank_value": true,
+      "display_name_cn": "soapnuke-param",
+      "display_name_en": "soapnuke-param",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "使用BWA作为比对软件（默认值：0，即默认使用Minimap2作为比对软件）。", 
+      "key": "bwa",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--bwa",
+      "description_en": "use BWA instead of Minimap2 for alignment (default: 0)",
+      "type": "String",
+      "order": 14,
+      "display_name_cn": "bwa",
+      "display_name_en": "bwa",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "处理SE 数据（默认值：0，即默认处理 PE 数据）",
+      "key": "se",
+      "required": false,
+      "value_from": "code#def getse(read2=${sample.metadata.files.read2}):\n  return'0' if read2 else '1'#",
+      "default": "",
+      "map_key": "--se",
+      "description_en": "use SE mode for alignment (default: 0)",
+      "type": "String",
+      "order": 15,
+      "display_name_cn": "se",
+      "display_name_en": "se",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "（仅适用于Minimap2）比对文件输出MD tag（默认值：0，即默认不输出）。", 
+      "key": "mdtag",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--mdtag",
+      "description_en": "output MD tag for alignment, only used for Minimap2 (default: 0)",
+      "type": "String",
+      "order": 16,
+      "display_name_cn": "mdtag",
+      "display_name_en": "mdtag",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "BQSR输出的BAM文件是否包含I/D质量值标签BD和BI（默认值：0，即默认输出）。", 
+      "key": "diq",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--diq",
+      "description_en": "do not output I/D base quality tags in bam for bqsr (default: 0)",
+      "type": "String",
+      "order": 19,
+      "display_name_cn": "diq",
+      "display_name_en": "diq",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "设置是否输出gVCF文件（默认值：NONE, 输出VCF文件；设置GVCF，输出gVCF文件）。", 
+      "key": "ERC",
+      "required": false,
+      "value_from": "",
+      "default": "NONE",
+      "map_key": "--ERC",
+      "description_en": "output GVCF file for haplotypecaller (default: NONE)",
+      "type": "String",
+      "order": 20,
+      "display_name_cn": "ERC",
+      "display_name_en": "ERC",
+      "validation_rule": ["GVCF", "NONE"]
+   },
+   {
+      "description_cn": "使用GATK HaplotypeCaller 4.0做为Germline变异检测软件（默认值：0，即默认使用GATK HaplotypeCaller 3.7）。", 
+      "key": "hc4",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--hc4",
+      "description_en": "use GATK HaplotypeCaller 4.0 instead of 3.7 for variant calling (default: 0)",
+      "type": "String",
+      "order": 21,
+      "display_name_cn": "hc4",
+      "display_name_en": "hc4",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "设置interval padding值（默认值：0）。", 
+      "key": "intervalpadding",
+      "required": false,
+      "value_from": "",
+      "default": 0,
+      "map_key": "--interval-padding",
+      "description_en": "interval padding number, only used for HaplotypeCaller 3.7/4.0 (default: 0)",
+      "type": "Int",
+      "order": 22,
+      "display_name_cn": "interval-padding",
+      "display_name_en": "interval-padding",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "设置stand call conf值（默认值：30）。", 
+      "key": "standcallconf",
+      "required": false,
+      "value_from": "",
+      "default": 30,
+      "map_key": "--stand-call-conf",
+      "description_en": "stand call conf number, only used for HaplotypeCaller 3.7/4.0 (default: 30)",
+      "type": "Int",
+      "order": 23,
+      "display_name_cn": "stand-call-conf",
+      "display_name_en": "stand-call-conf",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "（仅适用于HaplotypeCaller 3.7）scala文件，可通过此文件设置HaplotypeCaller参数（默认值：ExampleHaplotypeCallerFPGA.scala）。", 
+      "key": "scalafile",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/tools/GATK/gatk_best_practice/ExampleHaplotypeCallerFPGA.scala",
+      "map_key": "--scalafile",
+      "description_en": "scala file, including parameters, only used for HaplotypeCaller 3.7 (default: $MEGABOLT_TOOLS/GATK/gatk_best_practice/ExampleHaplotypeCallerFPGA.scala)",
+      "type": "String",
+      "order": 25,
+      "display_name_cn": "scalafile",
+      "display_name_en": "scalafile",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "（仅适用于HaplotypeCaller 4.0）HaplotypeCaller参数文件，详细参见GATK 4.0参数说明（默认值：arguments_file）。", 
+      "key": "argumentsfile",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/bin/arguments_file",
+      "map_key": "--arguments-file",
+      "description_en": "input arguments file, only used for HaplotypeCaller 4.0 (default: $MEGABOLT_BIN/arguments_file)",
+      "type": "String",
+      "order": 26,
+      "display_name_cn": "arguments-file",
+      "display_name_en": "arguments-file",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "使用DeepVariant做为Germline变异检测软件（默认值：0，即默认使用GATK HaplotypeCaller 3.7）。", 
+      "key": "deepvariant",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--deepvariant",
+      "description_en": "use DeepVariant instead of GATK HaplotypeCaller 3.7 for variant calling (default: 0)",
+      "type": "String",
+      "order": 27,
+      "display_name_cn": "deepvariant",
+      "display_name_en": "deepvariant",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "GenotypeGVCFs步骤的stand call conf值（默认值：10）", 
+      "key": "genotypegvcfsstandcallconf",
+      "required": false,
+      "value_from": "",
+      "default": 10,
+      "map_key": "--genotypegvcfs-stand-call-conf",
+      "description_en": "stand call conf number, only used for GenotypeGVCFs (default: 10)",
+      "type": "Int",
+      "order": 29,
+      "display_name_cn": "genotypegvcfs-stand-call-conf",
+      "display_name_en": "genotypegvcfs-stand-call-conf",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "GenotypeGVCFs输出allSites结果（默认值：0）。", 
+      "key": "allSites",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--allSites",
+      "description_en": "use allSites mode, only used for GenotypeGVCFs (default: 0)",
+      "type": "String",
+      "order": 30,
+      "display_name_cn": "allSites",
+      "display_name_en": "allSites",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "样本列表",
+      "key": "sampleList",
+      "required": false,
+      "value_from": "code#def create_prepare_file(samples=${samples}):\n  lines = []\n  group_map = {}\n  for index, sample in enumerate(samples):\n    metadata = sample.get('metadata')\n    group = metadata.get('group_id', 'None'+str(index))\n    groups = group_map.get(group, {})\n    line = [sample.get('sample_id', 'None'), ','.join(sample['read1'])]\n    if len(sample['read2']):\n      line.append(','.join(sample['read2']))\n      line.append(sample.get('adapter3', 'AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA'))\n      line.append(sample.get('adapter5', 'AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG'))\n    else:\n      line.append(sample.get('adapter3', 'AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA'))\n    groups[metadata.get('tumor_normal', 'normal')] = '\\t'.join(line)\n    group_map[group] = groups\n  cmd = ''\n  import os\n  normal = os.path.realpath('normalSampleList')\n  tumor = os.path.realpath('tumorSampleList')\n  normal_lines = []\n  tumor_lines = []\n  for g, m in group_map.items():\n    for k, v in m.items():\n      if k == 'normal':\n        normal_lines.append(v)\n      else:\n        tumor_lines.append(v)\n  if tumor_lines and normal_lines:\n    cmd = '--list ' + tumor + ' --list2 ' + normal\n    with open(normal, 'w') as fh:\n      fh.write('\\n'.join(normal_lines))\n    with open(tumor, 'w') as fh:\n      fh.write('\\n'.join(tumor_lines))\n  elif tumor_lines:\n    cmd = '--list ' + tumor\n    with open(tumor, 'w') as fh:\n      fh.write('\\n'.join(tumor_lines))\n  else:\n    cmd = '--list ' + normal\n    with open(normal, 'w') as fh:\n      fh.write('\\n'.join(normal_lines))\n  return cmd\n#",
+      "default": "",
+      "map_key": "",
+      "description_en": "sample list",
+      "type": "String",
+      "order": 1,
+      "display_name_cn": "sampleList",
+      "display_name_en": "sampleList",
+      "validation_rule": ""
+   }
+    ],
+    "input_files": [
+      {
+        "file_name": "sampleList",
+        "no_need_create": true,
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.tumor_normal}",
+            "required": true,
+            "display_name_cn": "肿瘤-对照",
+            "validation_rule":["tumor", "normal"],
+            "display_name_en": "Tumor-Normal"
+          },
+          {
+            "value_from": "${sample.metadata.group_id}",
+            "required": true
+          },
+          {
+            "value_from": "${sample.metadata.files.read1}",
+            "required": true,
+            "file_filter": "*.fq.gz,*fq"
+          },
+          {
+            "value_from": "${sample.metadata.files.read2}",
+            "required": false,
+            "file_filter": "*.fq.gz,*fq"
+          },
+          {
+            "value_from": "${adapter3}"
+          },
+          {
+            "value_from": "${adapter5}"
+          }
+        ]
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": [
+      {
+        "key": "files.bam",
+        "type": "File",
+        "pattern": "[sampleid].mm2.sortdup.bqsr.bam$"
+      },
+      {
+        "key": "bam_files_path",
+        "type": "File",
+        "pattern": "[sampleid].mm2.sortdup.bqsr.bam$"
+      },
+      {
+        "key": "files.read1",
+        "type": "File",
+        "pattern": "[sampleid]_1.fq.gz$"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "pattern": "[sampleid]_2.fq.gz$"
+      }
+    ]
+  }
+]

@@ -1,0 +1,484 @@
+[
+  {
+    "task_id": "Megabolt_wes_v2_1_0",
+    "main": "/usr/local/bin/MegaBOLT",
+    "cmd": "${main} --list ${input_files.sampleList} --type full --runtype WES",
+    "cpu": 8,
+    "memory": 40,
+    "docker": {
+      "image": "megabolt:v0.1",
+      "volumns": [
+        "/storeData/db:/data/pipeline/pfi/db"
+      ]
+    },
+    "logs": [
+      "${parameters.outputdir}/${sample.sample_id}/${sample.sample_id}.log",
+      "${parameters.outputdir}/${sample.sample_id}/${sample.sample_id}.out",
+      "${parameters.outputdir}/megabolt.log",
+      "${parameters.outputdir}/megabolt.out"
+    ],
+    "outputs": [
+      {
+        "key": "result",
+        "value": "${parameters.outputdir}/${sample.sample_id}/",
+        "type": "File",
+        "no_need_archive": true
+      }
+    ],
+    "output_raw_str": [
+      "[sampleid]/[sampleid]*.fq.gz",
+      "[sampleid]/[sampleid].*.[cram/bam]",
+      "[sampleid]/[sampleid].*.[cram.crai/bam.bai]",
+      "[sampleid]/[sampleid].*.vcf.gz",
+      "[sampleid]/[sampleid].*.vcf.gz.tbi",
+      "[sampleid]/stat/qc/[sampleid].fqstat.xls",
+      "[sampleid]/stat/qc/[sampleid].qual.png",
+      "[sampleid]/stat/qc/[sampleid].base.png",
+      "[sampleid]/stat/qc/[sampleid]_1.fq.gz.fqcheck",
+      "[sampleid]/stat/qc/[sampleid]_2.fq.gz.fqcheck",
+      "[sampleid]/stat/bam_stats/[sampleid].bamstat.xls",
+      "[sampleid]/stat/bam_stats/[sampleid].CollectInsertSizeMetrics.txt",
+      "[sampleid]/stat/bam_stats/[sampleid].depthstat.xls",
+      "[sampleid]/stat/bam_stats/[sampleid].gc_bias_metrics.xls",
+      "[sampleid]/stat/bam_stats/[sampleid].samtoolsstat.xls",
+      "[sampleid]/stat/bam_stats/[sampleid].Summary.xls",
+      "[sampleid]/stat/bam_stats/[sampleid].cumuPlot.png",
+      "[sampleid]/stat/bam_stats/[sampleid].gcbias.png",
+      "[sampleid]/stat/bam_stats/[sampleid].histPlot.png",
+      "[sampleid]/stat/bam_stats/[sampleid].insertsize.png",
+      "[sampleid]/stat/bam_stats/cumu.txt",
+      "[sampleid]/stat/bam_stats/depth_frequency.txt",
+      "[sampleid]/stat/bam_stats/chromosomes.report",
+      "[sampleid]/stat/bam_stats/coverage.report",
+      "[sampleid]/stat/bam_stats/depth_distribution.plot",
+      "[sampleid]/stat/bam_stats/depth.tsv.gz",
+      "[sampleid]/stat/bam_stats/insertsize.plot",
+      "[sampleid]/stat/bam_stats/region.tsv.gz",
+      "[sampleid]/stat/bam_stats/uncover.bed",
+      "[sampleid]/stat/vcf_stats/[sampleid].vcfstat.xls",
+      "[sampleid]/report/[sampleid].report.zip",
+      "[sampleid]/report/[sampleid]_cn.html,report_cn",
+      "[sampleid]/report/[sampleid]_en.html,report_en"
+    ],
+    "parameters": [
+   {
+      "description_cn": "参考基因组序列文件（默认值：$MEGABOLT_REFERENCE/hg19.fa）。", 
+      "key": "ref",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/reference/hg19.fa",
+      "map_key": "--ref",
+      "description_en": "reference (default: $MEGABOLT_REFERENCE/hg19.fa)",
+      "type": "String",
+      "order": 1,
+      "display_name_cn": "ref",
+      "display_name_en": "ref",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "dbSNP 文件（默认值： $MEGABOLT_REFERENCE/dbsnp_151.vcf.gz）。", 
+      "key": "vcf",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.vcf.gz",
+      "map_key": "--vcf",
+      "description_en": "dbsnp (default: $MEGABOLT_REFERENCE/dbsnp_151.vcf.gz)",
+      "type": "String",
+      "order": 2,
+      "display_name_cn": "vcf",
+      "display_name_en": "vcf",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "output directory (default: .)",
+      "key": "outputdir",
+      "required": false,
+      "value_from": "",
+      "default": "result",
+      "map_key": "--outputdir",
+      "description_en": "output directory (default: .)",
+      "type": "String",
+      "order": 3,
+      "display_name_cn": "outputdir",
+      "display_name_en": "outputdir",
+      "validation_rule": ""
+   },
+   {
+      "default": "BV4",
+      "value_from": "",
+      "type": "String",
+      "description_cn": "hg19和hg38对应的区间文件（默认：BV4）",
+      "required": false,
+      "display_name_en": "bed",
+      "map_key": "--bed",
+      "key": "bed",
+      "display_name_cn": "bed",
+      "description_en": "bed file, only used for WES mode (default: BV4)",
+      "validation_rule": [
+         "ACV6",
+         "ACV6-38",
+         "AV2",
+         "AV2-38",
+         "AV5",
+         "AV5-38",
+         "AV6",
+         "AV6-38",
+         "AV7",
+         "AV7-38",
+         "AiJi",
+         "AiJi-38",
+         "BV4",
+         "BV4-38",
+         "BV5",
+         "BV5-38",
+         "IDT",
+         "IDT-38",
+         "NME",
+         "NME-38",
+         "NV3",
+         "NV3-38",
+         "TV1.2",
+         "TV1.2-38",
+         "user_defined_path"
+      ],
+      "order": 4
+   },
+   {
+      "description_cn": "不运行标记去重（MarkDup）（默认值： 0， 即默认运行）。", 
+      "key": "nomarkdup",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-markdup",
+      "description_en": "do not run markdup in sortmarkdup (default: 0)",
+      "type": "String",
+      "order": 5,
+      "display_name_cn": "no-markdup",
+      "display_name_en": "no-markdup",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "不运行碱基质量值再校准（BQSR）（默认值：0，即默认运行）。", 
+      "key": "nobqsr",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-bqsr",
+      "description_en": "do not run bqsr in pipeline (default: 0)",
+      "type": "String",
+      "order": 6,
+      "display_name_cn": "no-bqsr",
+      "display_name_en": "no-bqsr",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "不输出过滤后的干净FASTQ文件（默认值：0，即默认输出）。", 
+      "key": "nofastqoutput",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-fastq-output",
+      "description_en": "do not output clean fastq file after filter in pipeline, only used when containing QC work (default: 0)",
+      "type": "String",
+      "order": 7,
+      "display_name_cn": "no-fastq-output",
+      "display_name_en": "no-fastq-output",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "不输出排序（去重）后的BAM文件（默认值：1，即默认不输出）。", 
+      "key": "nobamoutputforalignment",
+      "required": false,
+      "value_from": "",
+      "default": "1",
+      "map_key": "--no-bam-output-for-alignment",
+      "description_en": "do not output bam file of alignment (after SortMarkDup) in pipeline, only used when containing BQSR work (default: 1)",
+      "type": "String",
+      "order": 8,
+      "display_name_cn": "no-bam-output-for-alignment",
+      "display_name_en": "no-bam-output-for-alignment",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "当不运行BQSR时，不输出排序（去重）后的BAM文件（默认值：0，即默认输出）。", 
+      "key": "nobamoutputforsort",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-bam-output-for-sort",
+      "description_en": "do not output bam file of sort(markdup) in pipeline, only used when not containing BQSR work (default: 0)",
+      "type": "String",
+      "order": 9,
+      "display_name_cn": "no-bam-output-for-sort",
+      "display_name_en": "no-bam-output-for-sort",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "当运行BQSR时，不输出BQSR后的BAM文件（默认值：0，即默认输出）。", 
+      "key": "nobamoutputforbqsr",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--no-bam-output-for-bqsr",
+      "description_en": "do not output bam file of bqsr in pipeline, only used when containing BQSR work (default: 0)",
+      "type": "String",
+      "order": 10,
+      "display_name_cn": "no-bam-output-for-bqsr",
+      "display_name_en": "no-bam-output-for-bqsr",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "使用BWA作为比对软件（默认值：0，即默认使用Minimap2作为比对软件）。", 
+      "key": "bwa",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--bwa",
+      "description_en": "use BWA instead of Minimap2 for alignment (default: 0)",
+      "type": "String",
+      "order": 11,
+      "display_name_cn": "bwa",
+      "display_name_en": "bwa",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "处理SE 数据（默认值：0，即默认处理 PE 数据）",
+      "key": "se",
+      "required": false,
+      "value_from": "code#def getse(read2=${sample.metadata.files.read2}):\n  return'0' if read2 else '1'#",
+      "default": "",
+      "map_key": "--se",
+      "description_en": "use SE mode for alignment (default: 0)",
+      "type": "String",
+      "order": 12,
+      "display_name_cn": "se",
+      "display_name_en": "se",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "（仅适用于Minimap2）比对文件输出MD tag（默认值：0，即默认不输出）。", 
+      "key": "mdtag",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--mdtag",
+      "description_en": "output MD tag for alignment, only used for Minimap2 (default: 0)",
+      "type": "String",
+      "order": 13,
+      "display_name_cn": "mdtag",
+      "display_name_en": "mdtag",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "已知SNP/INDEL数据库文件（*.vcf.gz），默认使用如下文件设置：$MEGABOLT_REFERENCE/dbsnp_151.vcf.gz $MEGABOLT_REFERENCE/Mills_and_1000G_gold_standard.indels.hg19.vcf.gz $MEGABOLT_REFERENCE/1000G_phase1.indels.hg19.vcf.gz", 
+      "key": "knownSites",
+      "required": false,
+      "value_from": "",
+      "default": ["/mnt/ssd/MegaBOLT_scheduler/reference/dbsnp_151.vcf.gz", "/mnt/ssd/MegaBOLT_scheduler/reference/Mills_and_1000G_gold_standard.indels.hg19.vcf.gz", "/mnt/ssd/MegaBOLT_scheduler/reference/1000G_phase1.indels.hg19.vcf.gz"],
+      "map_key": "--knownSites",
+      "description_en": "known database of SNP/INDEL, it can be set multiple times (default: $MEGABOLT_REFERENCE/dbsnp_151.vcf.gz $MEGABOLT_REFERENCE/Mills_and_1000G_gold_standard.indels.hg19.vcf.gz $MEGABOLT_REFERENCE/1000G_phase1.indels.hg19.vcf.gz)",
+      "type": "Array[String]",
+      "order": 14,
+      "display_name_cn": "knownSites",
+      "display_name_en": "knownSites",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "设置BQSR索引文件（默认：$MEGABOLT_REFERENCE/hg19.fa.vcfi）", 
+      "key": "bqsrindex",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/reference/hg19.fa.vcfi",
+      "map_key": "--bqsrindex",
+      "description_en": "BQSR index file (default: $MEGABOLT_REFERENCE/hg19.fa.vcfi)",
+      "type": "String",
+      "order": 15,
+      "display_name_cn": "bqsrindex",
+      "display_name_en": "bqsrindex",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "BQSR输出的BAM文件是否包含I/D质量值标签BD和BI（默认值：0，即默认输出）。", 
+      "key": "diq",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--diq",
+      "description_en": "do not output I/D base quality tags in bam for bqsr (default: 0)",
+      "type": "String",
+      "order": 16,
+      "display_name_cn": "diq",
+      "display_name_en": "diq",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "设置是否输出gVCF文件（默认值：NONE, 输出VCF文件；设置GVCF，输出gVCF文件）。", 
+      "key": "ERC",
+      "required": false,
+      "value_from": "",
+      "default": "NONE",
+      "map_key": "--ERC",
+      "description_en": "output GVCF file for haplotypecaller (default: NONE)",
+      "type": "String",
+      "order": 17,
+      "display_name_cn": "ERC",
+      "display_name_en": "ERC",
+      "validation_rule": ["GVCF", "NONE"]
+   },
+   {
+      "description_cn": "使用GATK HaplotypeCaller 4.0做为Germline变异检测软件（默认值：0，即默认使用GATK HaplotypeCaller 3.7）。", 
+      "key": "hc4",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--hc4",
+      "description_en": "use GATK HaplotypeCaller 4.0 instead of 3.7 for variant calling (default: 0)",
+      "type": "String",
+      "order": 18,
+      "display_name_cn": "hc4",
+      "display_name_en": "hc4",
+      "validation_rule": ["0", "1"]
+   },
+   {
+      "description_cn": "设置interval padding值（默认值：0）。", 
+      "key": "intervalpadding",
+      "required": false,
+      "value_from": "",
+      "default": 0,
+      "map_key": "--interval-padding",
+      "description_en": "interval padding number, only used for HaplotypeCaller 3.7/4.0 (default: 0)",
+      "type": "Int",
+      "order": 19,
+      "display_name_cn": "interval-padding",
+      "display_name_en": "interval-padding",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "设置stand call conf值（默认值：30）。", 
+      "key": "standcallconf",
+      "required": false,
+      "value_from": "",
+      "default": 30,
+      "map_key": "--stand-call-conf",
+      "description_en": "stand call conf number, only used for HaplotypeCaller 3.7/4.0 (default: 30)",
+      "type": "Int",
+      "order": 20,
+      "display_name_cn": "stand-call-conf",
+      "display_name_en": "stand-call-conf",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "（仅适用于HaplotypeCaller 3.7）scala文件，可通过此文件设置HaplotypeCaller参数（默认值：ExampleHaplotypeCallerFPGA.scala）。", 
+      "key": "scalafile",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/tools/GATK/gatk_best_practice/ExampleHaplotypeCallerFPGA.scala",
+      "map_key": "--scalafile",
+      "description_en": "scala file, including parameters, only used for HaplotypeCaller 3.7 (default: $MEGABOLT_TOOLS/GATK/gatk_best_practice/ExampleHaplotypeCallerFPGA.scala)",
+      "type": "String",
+      "order": 21,
+      "display_name_cn": "scalafile",
+      "display_name_en": "scalafile",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "（仅适用于HaplotypeCaller 4.0）HaplotypeCaller参数文件，详细参见GATK 4.0参数说明（默认值：arguments_file）。", 
+      "key": "argumentsfile",
+      "required": false,
+      "value_from": "",
+      "default": "/mnt/ssd/MegaBOLT_scheduler/bin/arguments_file",
+      "map_key": "--arguments-file",
+      "description_en": "input arguments file, only used for HaplotypeCaller 4.0 (default: $MEGABOLT_BIN/arguments_file)",
+      "type": "String",
+      "order": 22,
+      "display_name_cn": "arguments-file",
+      "display_name_en": "arguments-file",
+      "validation_rule": ""
+   },
+   {
+      "description_cn": "使用DeepVariant做为Germline变异检测软件（默认值：0，即默认使用GATK HaplotypeCaller 3.7）。", 
+      "key": "deepvariant",
+      "required": false,
+      "value_from": "",
+      "default": "0",
+      "map_key": "--deepvariant",
+      "description_en": "use DeepVariant instead of GATK HaplotypeCaller 3.7 for variant calling (default: 0)",
+      "type": "String",
+      "order": 23,
+      "display_name_cn": "deepvariant",
+      "display_name_en": "deepvariant",
+      "validation_rule": ["0", "1"]
+   }
+],
+    "get_qc_rules": [
+      {
+         "target_file": "${output.result}/stat/bam_stats/${sample.sample_id}.bamstat.xls",
+         "value_pattern": "Average_depth\\(rmdup\\)\\s+(.+)%?",
+         "key": "Average_depth(rmdup)"
+      }
+    ],
+    "input_files": [
+      {
+        "file_name": "sampleList",
+        "barcode_files_type": "MERGE",
+        "column_separator": "\t",
+        "barcode_files_merge_by": ",",
+        "columns": [
+          {
+            "value_from": "${sample.sample_id}"
+          },
+          {
+            "value_from": "${sample.metadata.files.read1}",
+            "required": true,
+            "file_filter": "*.fq.gz,*fq"
+          },
+          {
+            "value_from": "${sample.metadata.files.read2}",
+            "required": false,
+            "file_filter": "*.fq.gz,*fq"
+          },
+          {
+            "value_from": "${adapter3}"
+          },
+          {
+            "value_from": "${adapter5}"
+          }
+        ]
+      }
+    ],
+    "input": [
+      {
+        "key": "files.read1",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "file_filter": "*.fq.gz,*fq"
+      }
+    ],
+    "output": [
+      {
+        "key": "files.bam",
+        "type": "File",
+        "pattern": "[sampleid].mm2.sortdup.bqsr.bam$"
+      },
+      {
+        "key": "bam_files_path",
+        "type": "File",
+        "pattern": "[sampleid].mm2.sortdup.bqsr.bam$"
+      },
+      {
+        "key": "files.read1",
+        "type": "File",
+        "pattern": "[sampleid]_1.fq.gz$"
+      },
+      {
+        "key": "files.read2",
+        "type": "File",
+        "pattern": "[sampleid]_2.fq.gz$"
+      }
+    ]
+  }
+]

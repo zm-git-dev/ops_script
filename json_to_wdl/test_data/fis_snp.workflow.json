@@ -1,0 +1,13 @@
+[
+  {
+    "workflow_code": "AP12939202304",
+    "workflow_name": "mgi_fis_snp_v1_0",
+    "batch_analysis": true,
+    "steps": [
+      {
+        "run_type": "scatter",
+        "task_id": "MGI_FIS_SNP_V1_0"
+      }
+    ]
+  }
+]
