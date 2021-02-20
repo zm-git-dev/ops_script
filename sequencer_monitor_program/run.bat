@@ -1,0 +1,1 @@
+PowerShell.exe -WindowStyle Hidden -file C:\sequencer_monitor_program\run_daemon.ps1

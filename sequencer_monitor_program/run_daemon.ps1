@@ -1,0 +1,1 @@
+python.exe C:\sequencer_monitor_program\sequencer_monitor.py

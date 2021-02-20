@@ -1,0 +1,9 @@
+{
+    "HOST": "zlims-sz.genomics.cn",
+    "PORT": "8000",
+    "USER": "user",
+    "PASSWORD": "123",
+    "logging_level": "INFO",
+    "hearbeat_interval": 15,
+    "check_status_interval": 120
+}

@@ -6,3 +6,4 @@
 * installer  web软件安装脚本以及日常运维脚本
 * jenkins 打包代码
 * update_workflow 用户自定义工作流集成api
+* seq500 seq50监控脚本
