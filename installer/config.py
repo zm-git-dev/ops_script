@@ -1,0 +1,4 @@
+SHARE_DATA_PATH = "/storeData"
+DATA_WARE_HOUSE = SHARE_DATA_PATH
+RSYNC_PATH = SHARE_DATA_PATH + "/ztron/rawdata"
+

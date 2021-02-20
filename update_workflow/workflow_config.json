@@ -1,0 +1,25 @@
+{
+  "archive_rules": [
+      {
+         "type": "result",
+         "file_pattern": "[sampleid]/[*]",
+         "wdl_output_key": "sentieon.result"
+      }
+  ],
+  "get_qc_rules": [
+      {
+         "target_file": "${Bamtools_index.result}/stat/qc/${sample.sample_id}.fqstat.xls",
+         "value_pattern": "Q20_1_clean\\s+(.+)%",
+         "key": "Q20_1",
+         "required": true,
+         "standard": ">10and<100"
+      },
+      {
+         "target_file": "${Bamtools_index.result}/stat/qc/${sample.sample_id}.fqstat.xls",
+         "value_pattern": "Q20_2_clean\\s+(.+)%",
+         "key": "Q20_2",
+         "required": false,
+         "standard": "<=10or>=100"
+      }
+  ]
+}
