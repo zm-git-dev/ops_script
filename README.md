@@ -7,3 +7,4 @@
 * jenkins 打包代码
 * update_workflow 用户自定义工作流集成api
 * seq500 seq50监控脚本
+* sge_install 一键安装sge
